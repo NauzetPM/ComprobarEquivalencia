@@ -9,7 +9,6 @@ class Hoteles
     {
         $this->conn = $db;
     }
-    //Se le pasa la ruta
     function comprobar($rutaCSV)
     {
         $prepare = $this->conn->prepare("SELECT * FROM Estado");

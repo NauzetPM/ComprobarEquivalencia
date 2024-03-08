@@ -1,4 +1,6 @@
 <?php
+namespace ComprobadorEquivalencias\Domain;
+
 class DatosHoteles
 {
     public $Codigo;

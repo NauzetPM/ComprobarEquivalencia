@@ -1,15 +1,22 @@
+CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE TABLE Hoteles
     (codigo varchar(255) PRIMARY KEY NOT NULL,
-    nombre varchar(255) NOT NULL);
+    nombre varchar(255) NOT NULL)
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8;
 CREATE TABLE HotelesVeturis
     (codigo varchar(255) PRIMARY KEY NOT NULL,
-    nombre varchar(255) NOT NULL);
+    nombre varchar(255) NOT NULL)
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8;
 CREATE TABLE Estado
     (id int AUTO_INCREMENT PRIMARY KEY,
     codigoHotel varchar(255) NOT NULL,
     codigoHotelVeturis varchar(255) NOT NULL,
     usuario varchar(255) NOT NULL
-    );
+    )
+    ENGINE=InnoDB
+    DEFAULT CHARSET=utf8;
 
 
 INSERT INTO Hoteles (codigo, nombre)

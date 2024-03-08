@@ -1,0 +1,14 @@
+{
+    "name": "npestano/api",
+    "autoload": {
+        "psr-4": {
+            "ComprobadorEquivalencias\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nauzet"
+        }
+    ],
+    "require": {}
+}
