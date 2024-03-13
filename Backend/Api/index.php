@@ -6,10 +6,12 @@ error_reporting(E_ALL);
 
 /* ASIGNAR LOS HEADERS A LA API */
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method");
+header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Content-Encoding");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 header("Allow: GET, POST, OPTIONS, PUT, DELETE");
 header('Content-Type: application/json');
+
+
 const ROOT_DIR = __DIR__;
 
 require(ROOT_DIR . '/vendor/autoload.php');
@@ -32,6 +34,10 @@ $router = [
         'comprobarFichero' => [
             'controlador' => 'ComprobadorEquivalencias\Infrastructure\Controlador',
             'funcion' => 'comprobarFichero'
+        ],
+        'obtenerEstadisticas' => [
+            'controlador' => 'ComprobadorEquivalencias\Infrastructure\Controlador',
+            'funcion' => 'obtenerEstadisticas'
         ],
     ]
 ];
@@ -84,6 +90,7 @@ function obtenerMetodoHTTP(): string
     return $metodo;
 }
 
+
 /**
  * @return string
  */
@@ -109,9 +116,6 @@ function obtenerParametros(): array
 {
     $request_body = json_decode(file_get_contents('php://input'), true);
 
-
-
-
     if (isset($_REQUEST['service'])) {
         if (isset($request_body)) {
             $parametros = array_merge($_REQUEST, $request_body);
@@ -121,10 +125,42 @@ function obtenerParametros(): array
     } else {
         $parametros = $request_body;
     }
-    if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
-        $tempFilePath = $_FILES['file']['tmp_name'];
-        $parametros['file'] = $tempFilePath;
+
+
+
+    if (isset($_FILES['file'])) {
+        $directory = __DIR__ . '/files/';
+        //Eliminar archivos anteriores
+        $files = scandir($directory);
+    
+        foreach ($files as $file) {
+            if ($file != '.' && $file != '..') {
+                $filePath = $directory . $file;
+                unlink($filePath);
+            }
+        }
+
+        sleep(2);
+        if ($_FILES['file']['error'] === UPLOAD_ERR_OK) {
+            $tempFilePath = $_FILES['file']['tmp_name'];
+
+            if ($_SERVER['HTTP_CONTENT_ENCODING'] === 'gzip') {
+                $compressedContent = file_get_contents($tempFilePath);
+
+                $uncompressedContent = zlib_decode($compressedContent);
+
+                $tempFilePath = $directory . $parametros["NombreFile"];
+
+                file_put_contents($tempFilePath, $uncompressedContent);
+            }
+
+            $parametros['file'] = $tempFilePath;
+        }
     }
+
+
+
+
     if (!is_array($parametros)) {
         return [];
     }

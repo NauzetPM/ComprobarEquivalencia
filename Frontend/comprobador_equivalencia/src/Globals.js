@@ -1,1 +1,1 @@
-export const ipPuerto = "127.0.1.1";
+export const ipPuerto = "10.1.102.40";

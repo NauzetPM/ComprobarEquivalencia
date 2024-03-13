@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "nombre": "Expedia",
+        "BBDD" :"accionviajesExpedia",
+        "Tabla": "equivalenciaestablecimientos_expediarapid"
+    },
+    {
+        "id": 2,
+        "nombre": "Cntravel",
+        "BBDD" : "accionviajesCntravel",
+        "Tabla" : "equivalenciaestablecimientos_cntravel"
+    }
+]

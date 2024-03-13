@@ -39,4 +39,12 @@
   th {
     background-color: #f2f2f2;
   }
-  
+  .Mapeado{
+    background-color: green;
+  }
+  .Mapeado-Block{
+    background-color: pink;
+  }
+  .Pendiente{
+    background-color: grey;
+  }
