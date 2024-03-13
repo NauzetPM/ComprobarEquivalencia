@@ -7,24 +7,24 @@ interface GestorEstablecimientos
     /**
      * getDatosPaginados
      *
-     * @param  mixed $page
-     * @param  mixed $perPage
+     * @param  int $page
+     * @param  int $perPage
      * @return array
      */
     public function getDatosPaginados(int $page, int $perPage): array;
     /**
      * getDatosByNombrePaginados
      *
-     * @param  mixed $nombre
-     * @param  mixed $page
-     * @param  mixed $perPage
+     * @param  string $nombre
+     * @param  int $page
+     * @param  int $perPage
      * @return array
      */
     public function getDatosByNombrePaginados(string $nombre, int $page, int $perPage): array;
     /**
      * getDatosByCodigo
      *
-     * @param  mixed $codigo
+     * @param  string $codigo
      * @return array
      */
     public function getDatosByCodigo(string $codigo): array;

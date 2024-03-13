@@ -15,7 +15,6 @@ header('Content-Type: application/json');
 const ROOT_DIR = __DIR__;
 
 require(ROOT_DIR . '/vendor/autoload.php');
-use ComprobadorEquivalencias\Infrastructure\Controlador;
 
 /* CONTROLA QUE LA PETICIÓN SEA HTTP (EVITA PROBLEMAS DE CORS) */
 if (!isset($_REQUEST) or !isset($_SERVER['REQUEST_METHOD'])) {
@@ -38,6 +37,10 @@ $router = [
         'obtenerEstadisticas' => [
             'controlador' => 'ComprobadorEquivalencias\Infrastructure\Controlador',
             'funcion' => 'obtenerEstadisticas'
+        ],
+        'descargar' => [
+            'controlador' => 'ComprobadorEquivalencias\Infrastructure\Controlador',
+            'funcion' => 'descargar'
         ],
     ]
 ];

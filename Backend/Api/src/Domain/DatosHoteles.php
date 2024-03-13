@@ -3,9 +3,9 @@ namespace ComprobadorEquivalencias\Domain;
 
 class DatosHoteles
 {
-    private $Codigo;
-    private $Nombre;
-    private $Estado;
+    private $codigo;
+    private $nombre;
+    private $estado;
     const ESTADO_PENDIENTE = "Pendiente";
     const ESTADO_MAPEADO = "Mapeado";
     const ESTADO_BLOCK = "Mapeado Block";
@@ -13,16 +13,16 @@ class DatosHoteles
     /**
      * __construct
      *
-     * @param  mixed $Codigo
-     * @param  mixed $Nombre
-     * @param  mixed $Estado
+     * @param  string $codigo
+     * @param  string $nombre
+     * @param  string $estado
      * @return void
      */
-    public function __construct($Codigo, $Nombre, $Estado)
+    public function __construct(string $codigo,string $nombre,string $estado)
     {
-        $this->Codigo = $Codigo;
-        $this->Nombre = $Nombre;
-        $this->Estado = $Estado;
+        $this->codigo = $codigo;
+        $this->nombre = $nombre;
+        $this->estado = $estado;
     }
     /**
      * asArray
@@ -32,34 +32,34 @@ class DatosHoteles
     public function asArray(): array
     {
         return [
-            "Codigo" => $this->Codigo,
-            "Nombre" => $this->Nombre,
-            "Estado" => $this->Estado
+            "Codigo" => $this->codigo,
+            "Nombre" => $this->nombre,
+            "Estado" => $this->estado
         ];
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getCodigo()
     {
-        return $this->Codigo;
+        return $this->codigo;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getNombre()
     {
-        return $this->Nombre;
+        return $this->nombre;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getEstado()
     {
-        return $this->Estado;
+        return $this->estado;
     }
 
 

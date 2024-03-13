@@ -68,6 +68,7 @@ const Main = (props: Props) => {
     }
 
     async function subirFichero(event: FormEvent<HTMLFormElement>): Promise<void> {
+        if(NombreEmpresa!=""){
         event.preventDefault();
         setCurrentPage(1);
         if (selectedFile) {
@@ -95,6 +96,7 @@ const Main = (props: Props) => {
                             },
                         };
                         const response = await axios.post(`http://${ipPuerto}/prueba.php`, formData, config);
+                        console.log(response.data);
                         setFilteredDatos(response.data);
                     }
                 };
@@ -102,11 +104,38 @@ const Main = (props: Props) => {
             } catch (error) {
                 console.error('Error al subir el archivo:', error);
             }
-        }
+        }       
+    }else{
+        alert("No se a seleccionado Mayorista");
+    }
     }
     useEffect(() => {
+        Descargar();
         Estadisticas();
     }, [nombreFile])
+    
+    const Descargar = async () => {
+        if (selectedFile) {
+            const formData = new FormData();
+            formData.append('service', 'descargar');
+            formData.append('NombreFile', nombreFile);
+            formData.append('NombreEmpresa', NombreEmpresa);
+            try {
+                const response = await axios.post(`http://${ipPuerto}/prueba.php`, formData, {
+                    responseType: 'blob', // Indica que la respuesta será un blob
+                });
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', "descarga.ods");
+                document.body.appendChild(link);
+                link.click();
+            } catch (error) {
+                console.error('Error al descargar el archivo:', error);
+            }
+        }
+    }
+    
 
     const Estadisticas = async () => {
         if (selectedFile) {
@@ -307,3 +336,6 @@ const Main = (props: Props) => {
 };
 
 export default Main;
+
+
+

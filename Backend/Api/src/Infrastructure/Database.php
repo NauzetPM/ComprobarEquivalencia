@@ -19,11 +19,11 @@ class Database
     /**
      * __construct
      *
-     * @param  mixed $host
-     * @param  mixed $user
-     * @param  mixed $pass
-     * @param  mixed $dbName
-     * @param  mixed $dbPort
+     * @param  string $host
+     * @param  string $user
+     * @param  string $pass
+     * @param  string $dbName
+     * @param  string $dbPort
      * @return void
      */
     public function __construct(string $host, string $user, string $pass, string $dbName, string $dbPort)

@@ -11,11 +11,11 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
     /**
      * __construct
      *
-     * @param  mixed $db
-     * @param  mixed $tabla
+     * @param  Database $db
+     * @param  string $tabla
      * @return void
      */
-    public function __construct(Database $db, $tabla)
+    public function __construct(Database $db, string $tabla)
     {
         $this->tabla = $tabla;
         $this->pdo = $db->connection;
@@ -40,10 +40,10 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
     /**
      * comprobarEstado
      *
-     * @param  mixed $codigo
+     * @param  string $codigo
      * @return array
      */
-    public function comprobarEstado($codigo): array
+    public function comprobarEstado(string $codigo): array
     {
         $sql = "SELECT COUNT(*) as total,codigo,usuario "
             . " FROM " . $this->tabla . " "

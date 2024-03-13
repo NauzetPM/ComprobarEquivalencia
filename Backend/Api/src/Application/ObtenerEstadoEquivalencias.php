@@ -8,8 +8,8 @@ use ComprobadorEquivalencias\Domain\GestorEstablecimientos;
 
 class ObtenerEstadoEquivalencias
 {
-    private GestorEstablecimientos $GestorFicheroCSV;
-    private EquivalenciasDAO $EquivalenciasDao;
+    private GestorEstablecimientos $gestorFicheroCSV;
+    private EquivalenciasDAO $equivalenciasDao;
     private int $pagina;
     private int $registrosPorPagina;
     private array $filtros;
@@ -18,7 +18,7 @@ class ObtenerEstadoEquivalencias
      * @param int $pagina
      * @param int $registrosPorPagina
      * @param GestorEstablecimientos $gestorFicheroCSV
-     * @param EquivalenciasDAO $EquivalenciasDao
+     * @param EquivalenciasDAO $equivalenciasDao
      * @param array $filtros
      */
     public function __construct(
@@ -28,8 +28,8 @@ class ObtenerEstadoEquivalencias
         EquivalenciasDAO $equivalenciasDAO,
         array $filtros = array()
     ) {
-        $this->GestorFicheroCSV = $gestorFicheroCSV;
-        $this->EquivalenciasDao = $equivalenciasDAO;
+        $this->gestorFicheroCSV = $gestorFicheroCSV;
+        $this->equivalenciasDao = $equivalenciasDAO;
         $this->pagina = $pagina;
         $this->registrosPorPagina = $registrosPorPagina;
         $this->filtros = $filtros;
@@ -37,31 +37,30 @@ class ObtenerEstadoEquivalencias
 
 
     /**
-     * __invoke
      *
      * @return array
      */
     public function __invoke(): array
     {
 
-        $Respuesta = "";
+        $respuesta = "";
         if (isset($this->filtros['nombre'])) {
-            $datosCSVPaginados = $this->GestorFicheroCSV->getDatosByNombrePaginados($this->filtros['nombre'], $this->pagina, $this->registrosPorPagina);
-            $Comprobador = new ComprobadorEstado($datosCSVPaginados["datos"], $this->EquivalenciasDao);
-            $Respuesta = [
+            $datosCSVPaginados = $this->gestorFicheroCSV->getDatosByNombrePaginados($this->filtros['nombre'], $this->pagina, $this->registrosPorPagina);
+            $Comprobador = new ComprobadorEstado($datosCSVPaginados["datos"], $this->equivalenciasDao);
+            $respuesta = [
                 "datos" => $Comprobador->getEstados(),
                 "totalBusquedas" => $datosCSVPaginados["total"]
             ];
         } elseif (isset($this->filtros['codigo'])) {
-            $datosCSVPaginados = $this->GestorFicheroCSV->getDatosByCodigo($this->filtros['codigo']);
+            $datosCSVPaginados = $this->gestorFicheroCSV->getDatosByCodigo($this->filtros['codigo']);
 
-            $Comprobador = new ComprobadorEstado($datosCSVPaginados, $this->EquivalenciasDao);
-            $Respuesta = $Comprobador->getEstados();
+            $Comprobador = new ComprobadorEstado($datosCSVPaginados, $this->equivalenciasDao);
+            $respuesta = $Comprobador->getEstados();
         } else {
-            $datosCSVPaginados = $this->GestorFicheroCSV->getDatosPaginados($this->pagina, $this->registrosPorPagina);
-            $Comprobador = new ComprobadorEstado($datosCSVPaginados["datos"], $this->EquivalenciasDao);
-            $Respuesta = $Comprobador->getEstados();
+            $datosCSVPaginados = $this->gestorFicheroCSV->getDatosPaginados($this->pagina, $this->registrosPorPagina);
+            $Comprobador = new ComprobadorEstado($datosCSVPaginados["datos"], $this->equivalenciasDao);
+            $respuesta = $Comprobador->getEstados();
         }
-        return $Respuesta;
+        return $respuesta;
     }
 }

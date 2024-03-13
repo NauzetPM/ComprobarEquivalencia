@@ -8,7 +8,6 @@ class ObtenerEstadisticas
     private GestorEstadisticas $gestorEstadisticas;
 
     /**
-     * __construct
      *
      * @return void
      */

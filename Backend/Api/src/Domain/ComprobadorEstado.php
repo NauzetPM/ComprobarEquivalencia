@@ -5,19 +5,19 @@ use ComprobadorEquivalencias\Infrastructure\EquivalenciasDAOMysql;
 
 class ComprobadorEstado
 {
-    private EquivalenciasDAOMysql $EquivalenciaDAO;
+    private EquivalenciasDAOMysql $equivalenciaDAO;
     private $datosCSV;
 
     /**
      * __construct
      *
-     * @param  mixed $datosCSV
-     * @param  mixed $EstadoDAO
+     * @param  array  $datosCSV
+     * @param  EquivalenciasDAOMysql $estadoDAO
      * @return void
      */
-    public function __construct(array $datosCSV, $EstadoDAO)
+    public function __construct(array $datosCSV, $estadoDAO)
     {
-        $this->EquivalenciaDAO = $EstadoDAO;
+        $this->equivalenciaDAO = $estadoDAO;
         $this->datosCSV = $datosCSV;
     }
     /**
@@ -31,7 +31,7 @@ class ComprobadorEstado
         $total = count($this->datosCSV);
         //Comprobar Mapeado y Mapeado Block
         for ($c = 0; $c < $total; $c++) {
-            $dato = $this->EquivalenciaDAO->comprobarEstado($this->datosCSV[$c][0]);
+            $dato = $this->equivalenciaDAO->comprobarEstado($this->datosCSV[$c][0]);
             if ($dato['total'] == 0) {
                 $Estado = DatosHoteles::ESTADO_PENDIENTE;
                 $Codigo = $this->datosCSV[$c][0];
@@ -46,10 +46,8 @@ class ComprobadorEstado
                 }
             }
             $datosHotel = new DatosHoteles($Codigo, $Nombre, $Estado);
-            //var_dump($datosHotel);
             $datosJSON[] = $datosHotel->asArray();
         }
-        //var_dump($datosJSON);
         return $datosJSON;
     }
 

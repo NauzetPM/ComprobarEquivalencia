@@ -10,5 +10,8 @@
             "name": "Nauzet"
         }
     ],
-    "require": {}
+    "require": {
+        "ext-dom": "*",
+        "phpoffice/phpspreadsheet": "^2.0"
+    }
 }

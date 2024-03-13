@@ -1,9 +1,10 @@
 <?php
 namespace ComprobadorEquivalencias\Infrastructure;
+use ComprobadorEquivalencias\Domain\GestorSelector;
 
-class BBDDSelector
+class BBDDSelector implements GestorSelector
 {
-    private $BBDDCorrespondencias;
+    private $correspondencias;
     /**
      * __construct
      *
@@ -11,28 +12,28 @@ class BBDDSelector
      */
     public function __construct()
     {
-        $this->BBDDCorrespondencias = array();
-        $this->BBDDCorrespondencias[] = array(
+        $this->correspondencias = array();
+        $this->correspondencias[] = array(
             "Nombre" => "Expedia",
-            "BBDD" => "accionviajesExpedia",
-            "Tabla" => "equivalenciaestablecimientos_expediarapid",
+            "conexion" => "accionviajesExpedia",
+            "tabla" => "equivalenciaestablecimientos_expediarapid",
         );
-        $this->BBDDCorrespondencias[] = array(
+        $this->correspondencias[] = array(
             "Nombre" => "Cntravel",
-            "BBDD" => "accionviajesCntravel",
-            "Tabla" => "equivalenciaestablecimientos_cntravel",
+            "conexion" => "accionviajesCntravel",
+            "tabla" => "equivalenciaestablecimientos_cntravel",
         );
     }
     /**
      * obtenerCorrespondencias
      *
-     * @param  mixed $nombre
+     * @param  string $nombre
      * @return array
      */
     public function obtenerCorrespondencias(string $nombre): array
     {
         $respuesta = [];
-        foreach ($this->BBDDCorrespondencias as $key => $value) {
+        foreach ($this->correspondencias as $key => $value) {
             if ($nombre == $value["Nombre"]) {
                 $respuesta = $value;
             }

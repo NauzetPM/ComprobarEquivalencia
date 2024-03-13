@@ -3,11 +3,12 @@ namespace ComprobadorEquivalencias\Infrastructure;
 
 use ComprobadorEquivalencias\Application\ObtenerEstadisticas;
 use ComprobadorEquivalencias\Application\ObtenerEstadoEquivalencias;
+use ComprobadorEquivalencias\Application\ObtenerSeleccion;
 use ComprobadorEquivalencias\Infrastructure\Database;
 use ComprobadorEquivalencias\Infrastructure\EquivalenciasDAOMysql;
 use ComprobadorEquivalencias\Infrastructure\GestorEstablecimientosCSV;
-use ComprobadorEquivalencias\Infrastructure\Estadisticas;
-use ComprobadorEquivalencias\Infrastructure\BBDDSelector;
+
+
 
 class Controlador
 {
@@ -19,44 +20,70 @@ class Controlador
     private array $parametros;
     private $rutaCSV = "/usr/local/programadores/ComprobarEquivalencia/Backend/Api/files/";
     private $database;
-    private $EquivalenciasDao;
-    private $GestorFicheroCSV;
-    private $Estadisticas;
+    private $equivalenciasDao;
+    private $gestorFicheroCSV;
+    private $estadisticas;
 
-    private $BBDDSelector;
+    private $selector;
+
+    private $descargarArchivo;
+
+    private $gestorArchivo;
 
     private $rutaArchivoCompleto;
 
     /**
      * __construct
      *
-     * @param  mixed $parametros
+     * @param  array $parametros
      * @return void
      */
     public function __construct(array $parametros)
     {
         $this->parametros = $parametros;
-        $this->BBDDSelector = new BBDDSelector();
-        
-        /*$prueba=new BBDDSelectorJSON();
-        var_dump($prueba->obtenerCorrespondencias($this->parametros["NombreEmpresa"]));*/
 
-        $parametrosBBDD = $this->BBDDSelector->obtenerCorrespondencias($this->parametros["NombreEmpresa"]);
-        $this->dbName = $parametrosBBDD["BBDD"];
-        $NombreTabla = $parametrosBBDD["Tabla"];
+        $dbSelectorName = "opciones";
+
+        $databaseSelector = new Database($this->host, $this->user, $this->pass, $dbSelectorName, $this->dbPort);
+        $this->selector = new BBDDSelectorMysql($databaseSelector);
+        $caso_de_uso = new ObtenerSeleccion(
+            $this->selector
+        );
+
+        $parametrosBBDD = $caso_de_uso($this->parametros["NombreEmpresa"]);
+
+        $this->dbName = $parametrosBBDD["conexion"];
+
+        $NombreTabla = $parametrosBBDD["tabla"];
+
         $this->database = new Database($this->host, $this->user, $this->pass, $this->dbName, $this->dbPort);
+
         $NombreArchivo = $this->parametros["NombreFile"];
+
         $this->rutaArchivoCompleto = $this->rutaCSV . $NombreArchivo;
-        $this->GestorFicheroCSV = new GestorEstablecimientosCSV($this->rutaArchivoCompleto);
-        $this->EquivalenciasDao = new EquivalenciasDAOMysql($this->database, $NombreTabla);
-        $this->Estadisticas = new Estadisticas($this->database, $this->rutaArchivoCompleto, $NombreTabla);
-        $tiempoLimite = 60; // Establece el tiempo límite en segundos
+
+        $this->gestorFicheroCSV = new GestorEstablecimientosCSV($this->rutaArchivoCompleto);
+
+        $this->equivalenciasDao = new EquivalenciasDAOMysql($this->database, $NombreTabla);
+
+        $this->estadisticas = new GestorEstadisticasCSV($this->database, $this->rutaArchivoCompleto, $NombreTabla);
+
+        $this->descargarArchivo = new DescargarArchivo();
+
+        $this->gestorArchivo = new GestorArchivosOds('/usr/local/programadores/ComprobarEquivalencia/Backend/Api/files/datos_Estados.ods');
+
+        $tiempoLimite = 60;
+
         $tiempoInicio = time();
+
         while (!file_exists($this->rutaArchivoCompleto)) {
+
             sleep(1);
 
             if ((time() - $tiempoInicio) > $tiempoLimite) {
+
                 throw new \Exception("Tiempo de espera agotado. El archivo no está disponible.");
+
             }
         }
     }
@@ -69,18 +96,30 @@ class Controlador
      */
     public function comprobarFichero(): array
     {
+
         $page = isset($this->parametros['page']) ? intval($this->parametros['page']) : 1;
         $perPage = isset($this->parametros['perPage']) ? intval($this->parametros['perPage']) : 100;
         $filtros = $this->parametros;
         $caso_de_uso = new ObtenerEstadoEquivalencias(
             $page,
             $perPage,
-            $this->GestorFicheroCSV,
-            $this->EquivalenciasDao,
+            $this->gestorFicheroCSV,
+            $this->equivalenciasDao,
             $filtros
         );
+        $datos = $caso_de_uso();
+        $this->gestorArchivo->crearArchivoOds($datos);
 
-        return $caso_de_uso();
+        return $datos;
+    }
+    /**
+     * descargar
+     *
+     * @return void
+     */
+    public function descargar()
+    {
+        $this->descargarArchivo->descargarArchivo("datos_Estados.ods");
     }
     /**
      * obtenerEstadisticas
@@ -90,7 +129,7 @@ class Controlador
     public function obtenerEstadisticas(): array
     {
         $caso_de_uso = new ObtenerEstadisticas(
-            $this->Estadisticas,
+            $this->estadisticas,
         );
 
         return $caso_de_uso();
