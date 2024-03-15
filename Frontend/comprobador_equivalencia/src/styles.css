@@ -1,50 +1,56 @@
-
-.main-container {
-    text-align: center;
-    margin: auto;
-    padding: 20px;
-  }
-  .table-container {
-    margin: auto;
-    padding: 20px;
-  }
-  .btn {
-    cursor:pointer;
-    border: none;
-    background: none;
-    width: 20px;
-    height: 20px;
+/* Estilos generales */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5; /* Color de fondo */
 }
 
-  form {
-    margin-bottom: 20px;
-  }
-  
-  input[type="file"] {
-    border: 1px solid black;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  th, td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  th {
-    background-color: #f2f2f2;
-  }
-  .Mapeado{
-    background-color: green;
-  }
-  .Mapeado-Block{
-    background-color: pink;
-  }
-  .Pendiente{
-    background-color: grey;
-  }
+.main-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  padding: 20px;
+}
+
+.btn {
+  cursor: pointer;
+  border: none;
+  background: #007bff; /* Color del botón */
+  color: #fff; /* Color del texto */
+  border-radius: 20px; /* Bordes redondeados */
+  padding: 10px 20px; /* Espacio interno */
+  font-size: 16px; /* Tamaño del texto */
+}
+
+form {
+  margin-bottom: 20px;
+}
+
+input[type="file"] {
+  border: 1px solid black;
+  padding: 10px; /* Espacio interno */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+.basic-single {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  height: 30%;
+  width: 30%;
+}
+
+.loading-container > div {
+  width: 100px;
+  height: 100px;
+}
+
