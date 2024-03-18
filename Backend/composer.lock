@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c6143353d7ddcfe93e02c14294d5db72",
+    "content-hash": "af00a7f88f65d56172ebb8664b459b03",
     "packages": [
         {
             "name": "maennchen/zipstream-php",
@@ -1170,7 +1170,9 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "ext-dom": "*"
+        "ext-dom": "*",
+        "ext-apcu": "*",
+        "ext-memcached": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.6.0"

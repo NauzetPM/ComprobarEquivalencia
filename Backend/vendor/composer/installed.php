@@ -3,7 +3,7 @@
         'name' => 'npestano/api',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'ebe0676463325d720789a48c6a55d05d8e41e23e',
+        'reference' => '094527da7aa3ec00e23c37afb2e67bbc93d2b5a0',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -40,7 +40,7 @@
         'npestano/api' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'ebe0676463325d720789a48c6a55d05d8e41e23e',
+            'reference' => '094527da7aa3ec00e23c37afb2e67bbc93d2b5a0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

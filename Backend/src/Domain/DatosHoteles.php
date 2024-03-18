@@ -6,9 +6,16 @@ class DatosHoteles
     private $codigo;
     private $nombre;
     private $estado;
+    private $activa;
     const ESTADO_PENDIENTE = "Pendiente";
     const ESTADO_MAPEADO = "Mapeado";
     const ESTADO_BLOCK = "Mapeado Block";
+
+    const Activa="Si";
+
+    const No_Aciva="No";
+
+    const No_Descargada= "No descargada";
 
     /**
      * __construct
@@ -16,13 +23,15 @@ class DatosHoteles
      * @param  string $codigo
      * @param  string $nombre
      * @param  string $estado
+     * @param string $activa
      * @return void
      */
-    public function __construct(string $codigo,string $nombre,string $estado)
+    public function __construct(string $codigo,string $nombre,string $estado,string $activa)
     {
         $this->codigo = $codigo;
         $this->nombre = $nombre;
         $this->estado = $estado;
+        $this->activa=$activa;
     }
     /**
      * asArray
@@ -34,7 +43,8 @@ class DatosHoteles
         return [
             "Codigo" => $this->codigo,
             "Nombre" => $this->nombre,
-            "Estado" => $this->estado
+            "Estado" => $this->estado,
+            "Activa" => $this->activa,
         ];
     }
 

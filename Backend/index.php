@@ -33,6 +33,10 @@ $router = [
             'controlador' => 'ComprobadorEquivalencias\Infrastructure\Controlador',
             'funcion' => 'descargar'
         ],
+        'comprobar' => [
+            'controlador' => 'ComprobadorEquivalencias\Infrastructure\Controlador',
+            'funcion' => 'comprobarToken'
+        ],
     ]
 ];
 $verbo_http = obtenerMetodoHTTP();
@@ -164,7 +168,7 @@ function obtenerParametros(): array
             $tempFilePath = $directory . $fileName . '_' . $chunkIndex;
 
             // Verificar si es la primera vez que se suben fragmentos
-            if ($chunkIndex === 0) {
+            /*if ($chunkIndex === 0) {
                 // Eliminar todos los archivos en la carpeta files
                 $completeDirectory = '/usr/local/programadores/ComprobarEquivalencia/Backend/files/';
                 $files = glob($completeDirectory . '*'); // Obtener todos los archivos en la carpeta
@@ -173,8 +177,9 @@ function obtenerParametros(): array
                         unlink($file); // Eliminar cada archivo encontrado
                     }
                 }
-            }
-            sleep(4);
+                sleep(1);
+            }*/
+            
             move_uploaded_file($_FILES['chunk']['tmp_name'], $tempFilePath);
             $totalChunks = (int) $_POST['totalChunks'];
             $receivedChunks = count(glob($directory . $fileName . '_*'));

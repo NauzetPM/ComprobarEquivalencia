@@ -1,0 +1,11 @@
+CREATE TABLE EquivalenciasEstablecimientos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    mayorista VARCHAR(255),
+    conexion VARCHAR(255),
+    tabla1 VARCHAR(255),
+    tabla2 VARCHAR(255)
+);
+INSERT INTO EquivalenciasEstablecimientos (mayorista, conexion, tabla1, tabla2) 
+VALUES ('Expedia', 'accionviajesExpedia', 'equivalenciaestablecimientos_expediarapid','establecimientos_expediarapid');
+INSERT INTO EquivalenciasEstablecimientos (mayorista, conexion, tabla1, tabla2) 
+VALUES ('Cntravel', 'accionviajesCntravel', 'equivalenciaestablecimientos_cntravel','establecimientos_cntravel');
