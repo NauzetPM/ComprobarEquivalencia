@@ -3,7 +3,7 @@ namespace ComprobadorEquivalencias\Infrastructure;
 
 use ComprobadorEquivalencias\Domain\GestorSelector;
 use PDO;
-class BBDDSelectorMysql implements GestorSelector
+class GestorSelectorMysql implements GestorSelector
 {
     private $pdo;
     

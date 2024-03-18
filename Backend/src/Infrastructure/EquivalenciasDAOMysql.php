@@ -8,6 +8,7 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
 {
     private $tabla;
     private $pdo;
+    private $db;
     /**
      * __construct
      *
@@ -15,10 +16,11 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
      * @param  string $tabla
      * @return void
      */
-    public function __construct(Database $db, string $tabla)
+    public function __construct(Database $db, string $tabla,string $dbName)
     {
         $this->tabla = $tabla;
         $this->pdo = $db->connection;
+        $this->db=$dbName;
     }
 
     /**
@@ -28,7 +30,7 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
      */
     public function getAll(): array
     {
-        $sql = "SELECT * FROM " . $this->tabla;
+        $sql = "SELECT * FROM " . $this->db .".".$this->tabla;
         $prepare = $this->pdo->prepare($sql);
         $prepare->execute();
         $datos = array();
@@ -46,9 +48,9 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
     public function comprobarEstado(string $codigo): array
     {
         $sql = "SELECT COUNT(*) as total,codigo,usuario "
-            . " FROM " . $this->tabla . " "
+            . " FROM " . $this->db .".".$this->tabla . " "
             . " WHERE codigo = :codigo "
-            . "GROUP BY codigo, usuario";
+            . " GROUP BY codigo, usuario";
         $prepare = $this->pdo->prepare($sql);
         $prepare->bindParam(':codigo', $codigo);
         $prepare->execute();

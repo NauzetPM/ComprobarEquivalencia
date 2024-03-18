@@ -41,7 +41,7 @@
 <script>
 import axios from "axios";
 import { ipPuerto } from "../Globals.js";
-import { ElSelect, ElOption, ElProgress,ElButton } from "element-plus";
+import { ElSelect, ElOption, ElProgress, ElButton } from "element-plus";
 import "element-plus/dist/index.css";
 import CryptoJS from "crypto-js";
 export default {
@@ -81,28 +81,26 @@ export default {
         label: dato.nombre,
       }));
       this.opciones = nuevasOpciones;
-    },    
+    },
     async subirFichero() {
-      this.token = this.generarTokenUnico();
-      console.log(this.token);
-      if (this.token) {
-        const fileExtensionC = this.selectedFile.name.split(".").pop();
-        this.fileExtension = fileExtensionC;
-        this.nombreFile = this.selectedFile.name;
+      if (this.selectedFile) {
+        this.token = this.generarTokenUnico();
+        if (this.token) {
+          const fileExtensionC = this.selectedFile.name.split(".").pop();
+          this.fileExtension = fileExtensionC;
+          this.nombreFile = this.selectedFile.name;
 
-        const formData = new FormData();
-        formData.append("service", "comprobar");
-        formData.append("token", this.token);
-        const respuesta = await axios.post(
-          `http://${ipPuerto}/prueba.php`,
-          formData
-        );
-       
-        if (respuesta.data == false) {
-          if (this.NombreEmpresa !== "") {
-            if (this.selectedFile) {
+          const formData = new FormData();
+          formData.append("service", "comprobar");
+          formData.append("token", this.token);
+          const respuesta = await axios.post(
+            `http://${ipPuerto}/prueba.php`,
+            formData
+          );
+
+          if (respuesta.data == false) {
+            if (this.NombreEmpresa !== "") {
               try {
-
                 const CHUNK_SIZE = 1024 * 1024;
                 const totalChunks = Math.ceil(
                   this.selectedFile.size / CHUNK_SIZE
@@ -119,9 +117,8 @@ export default {
                   formData.append("chunkIndex", chunkIndex.toString());
                   formData.append("service", "comprobarFichero");
                   formData.append("NombreFile", this.selectedFile.name);
-                  formData.append("NombreEmpresa", this.NombreEmpresa);
-                  formData.append("fileExtension", this.fileExtension);
-                  if(chunkIndex==totalChunks-1){
+                  formData.append("NombreMayorista", this.NombreEmpresa);
+                  if (chunkIndex == totalChunks - 1) {
                     formData.append("token", this.token);
                   }
                   await axios.post(`http://${ipPuerto}/prueba.php`, formData);
@@ -146,7 +143,7 @@ export default {
                     }
                   }
                 };
-                reader.readAsArrayBuffer(this.selectedFile);                
+                reader.readAsArrayBuffer(this.selectedFile);
               } catch (error) {
                 console.error("Error al subir el archivo:", error);
               }
@@ -155,7 +152,10 @@ export default {
             alert("No se ha seleccionado el Mayorista");
           }
         }
+
         await this.descargar();
+      } else {
+        alert("No se ha seleccionado el archivo");
       }
     },
     async descargar() {
@@ -164,8 +164,7 @@ export default {
         const formData = new FormData();
         formData.append("service", "descargar");
         formData.append("NombreFile", this.nombreFile);
-        formData.append("NombreEmpresa", this.NombreEmpresa);
-        formData.append("fileExtension", this.fileExtension);
+        formData.append("NombreMayorista", this.NombreEmpresa);
         try {
           const response = await axios.post(
             `http://${ipPuerto}/prueba.php`,
