@@ -83,6 +83,7 @@ export default {
       this.opciones = nuevasOpciones;
     },
     async subirFichero() {
+      this.progress=0;
       if (this.selectedFile) {
         this.token = this.generarTokenUnico();
         if (this.token) {
@@ -91,8 +92,9 @@ export default {
           this.nombreFile = this.selectedFile.name;
 
           const formData = new FormData();
-          formData.append("service", "comprobar");
+          formData.append("service", "comprobarToken");
           formData.append("token", this.token);
+          formData.append("NombreMayorista", this.NombreEmpresa);
           const respuesta = await axios.post(
             `http://${ipPuerto}/prueba.php`,
             formData
@@ -115,7 +117,7 @@ export default {
                   );
                   formData.append("totalChunks", totalChunks.toString());
                   formData.append("chunkIndex", chunkIndex.toString());
-                  formData.append("service", "comprobarFichero");
+                  formData.append("service", "subirFichero");
                   formData.append("NombreFile", this.selectedFile.name);
                   formData.append("NombreMayorista", this.NombreEmpresa);
                   if (chunkIndex == totalChunks - 1) {
@@ -147,9 +149,9 @@ export default {
               } catch (error) {
                 console.error("Error al subir el archivo:", error);
               }
+            } else {
+              alert("No se ha seleccionado el Mayorista");
             }
-          } else {
-            alert("No se ha seleccionado el Mayorista");
           }
         }
 
@@ -165,6 +167,7 @@ export default {
         formData.append("service", "descargar");
         formData.append("NombreFile", this.nombreFile);
         formData.append("NombreMayorista", this.NombreEmpresa);
+        formData.append("token", this.token);
         try {
           const response = await axios.post(
             `http://${ipPuerto}/prueba.php`,

@@ -1,11 +1,26 @@
 <?php
 namespace ComprobadorEquivalencias\Infrastructure;
-class FileCleaner {
 
-    public function __construct() {
+class FileCleaner
+{
+
+    /**
+     * __construct
+     *
+     * @return void
+     */
+    public function __construct()
+    {
     }
 
-    public function cleanOldFiles($directory) {
+    /**
+     * cleanOldFiles
+     *
+     * @param  string $directory
+     * @return void
+     */
+    public function cleanOldFiles($directory): void
+    {
         //$fecha_limite = strtotime('-3 hours');
         //$fecha_limite = strtotime('-3 days');
         $fecha_limite = strtotime('-3 minutes');

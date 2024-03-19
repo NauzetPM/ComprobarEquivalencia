@@ -10,6 +10,8 @@ class ComprobarActiva implements ActivaDao
     private $pdo;
 
     private $db;
+
+
     /**
      * __construct
      *
@@ -17,11 +19,11 @@ class ComprobarActiva implements ActivaDao
      * @param  string $tabla
      * @return void
      */
-    public function __construct(Database $db, string $tabla,string $dbName)
+    public function __construct(Database $db, string $tabla, string $dbName)
     {
         $this->tabla = $tabla;
         $this->pdo = $db->connection;
-        $this->db=$dbName;
+        $this->db = $dbName;
     }
 
     /**
@@ -31,7 +33,7 @@ class ComprobarActiva implements ActivaDao
      */
     public function getAll(): array
     {
-        $sql = "SELECT * FROM " . $this->db .".".$this->tabla;
+        $sql = "SELECT * FROM " . $this->db . "." . $this->tabla;
         $prepare = $this->pdo->prepare($sql);
         $prepare->execute();
         $datos = array();
@@ -49,9 +51,9 @@ class ComprobarActiva implements ActivaDao
     public function comprobarActiva(string $codigo): array
     {
         $sql = "SELECT COUNT(*) as total,codigo,activo "
-            . " FROM " . $this->db .".".$this->tabla . " "
+            . " FROM " . $this->db . "." . $this->tabla . " "
             . " WHERE codigo = :codigo "
-            . "GROUP BY codigo, activo";
+            . " GROUP BY codigo, activo ";
         $prepare = $this->pdo->prepare($sql);
         $prepare->bindParam(':codigo', $codigo);
         $prepare->execute();

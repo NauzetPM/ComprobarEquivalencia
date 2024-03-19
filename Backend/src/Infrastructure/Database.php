@@ -26,8 +26,13 @@ class Database
      * @param  string $dbPort
      * @return void
      */
-    public function __construct(string $host, string $user, string $pass, string $dbName, string $dbPort)
-    {
+    public function __construct(
+        string $host,
+        string $user,
+        string $pass,
+        string $dbName,
+        string $dbPort
+    ) {
         $this->host = $host;
         $this->user = $user;
         $this->pass = $pass;
@@ -45,12 +50,17 @@ class Database
     private function getConnection(): PDO
     {
         try {
-            $pdo = new PDO("mysql:host=" . $this->host . "; port=" . $this->dbPort . ";dbname=" . $this->dbName, $this->user, $this->pass);
+            $pdo = new PDO(
+                "mysql:host=" . $this->host .
+                "; port=" . $this->dbPort .
+                ";dbname=" . $this->dbName,
+                $this->user,
+                $this->pass
+            );
             $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             return $pdo;
         } catch (PDOException $e) {
-            print "Error: No puede conectarse con la base de datos. {$e->getMessage()}\n";
-            exit;
+            throw new \Exception("Error: No puede conectarse con la base de datos. {$e->getMessage()}\n");
         }
     }
 }

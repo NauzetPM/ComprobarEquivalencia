@@ -2,22 +2,46 @@
 
 namespace ComprobadorEquivalencias\Infrastructure;
 
-class CacheManager {
+class CacheManager
+{
     private $cacheDir;
 
-    public function __construct($cacheDir) {
+    /**
+     * __construct
+     *
+     * @param  string $cacheDir
+     * @return void
+     */
+    public function __construct($cacheDir)
+    {
         $this->cacheDir = $cacheDir;
         if (!is_dir($this->cacheDir)) {
             mkdir($this->cacheDir, 0777, true);
         }
     }
 
-    public function guardarToken($key, $value) {
+    /**
+     * guardarToken
+     *
+     * @param  string $key
+     * @param  string $value
+     * @return void
+     */
+    public function guardarToken($key, $value): void
+    {
         $filename = $this->getCacheFileName($key);
         file_put_contents($filename, $value);
     }
 
-    public function comprobarToken($key, $expiry = 180) {
+    /**
+     * esTokenValido
+     *
+     * @param  string $key
+     * @param  int $expiry
+     * @return bool
+     */
+    public function esTokenValido($key, $expiry = 180): bool
+    {
         $filename = $this->getCacheFileName($key);
         if (file_exists($filename)) {
             $filemtime = filemtime($filename);
@@ -31,7 +55,14 @@ class CacheManager {
     }
 
 
-    private function getCacheFileName($key) {
+    /**
+     * getCacheFileName
+     *
+     * @param  string $key
+     * @return string
+     */
+    private function getCacheFileName($key): string
+    {
         return $this->cacheDir . '/' . md5($key);
     }
 }

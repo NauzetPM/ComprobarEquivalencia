@@ -3,7 +3,7 @@ namespace ComprobadorEquivalencias\Domain;
 
 interface GestorSelector
 {
-    
+
     /**
      * obtenerCorrespondencias
      *

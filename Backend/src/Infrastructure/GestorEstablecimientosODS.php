@@ -8,11 +8,22 @@ class GestorEstablecimientosODS implements GestorEstablecimientos
 {
     private $odsFile;
 
+    /**
+     * __construct
+     *
+     * @param  mixed $odsFile
+     * @return void
+     */
     public function __construct(string $odsFile)
     {
         $this->odsFile = $odsFile;
     }
 
+    /**
+     * getDatos
+     *
+     * @return array
+     */
     public function getDatos(): array
     {
         $datosODS = array();
@@ -22,7 +33,6 @@ class GestorEstablecimientosODS implements GestorEstablecimientos
 
         $sheet = $objPHPExcel->getActiveSheet();
 
-        // Itera sobre las filas de la hoja
         foreach ($sheet->getRowIterator() as $row) {
             $datosFila = array();
 

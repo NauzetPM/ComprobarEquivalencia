@@ -11,11 +11,11 @@ class DatosHoteles
     const ESTADO_MAPEADO = "Mapeado";
     const ESTADO_BLOCK = "Mapeado Block";
 
-    const Activa="Si";
+    const Activa = "Si";
 
-    const No_Aciva="No";
+    const No_Aciva = "No";
 
-    const No_Descargada= "No descargada";
+    const No_Descargada = "No descargada";
 
     /**
      * __construct
@@ -26,12 +26,16 @@ class DatosHoteles
      * @param string $activa
      * @return void
      */
-    public function __construct(string $codigo,string $nombre,string $estado,string $activa)
-    {
+    public function __construct(
+        string $codigo,
+        string $nombre,
+        string $estado,
+        string $activa
+    ) {
         $this->codigo = $codigo;
         $this->nombre = $nombre;
         $this->estado = $estado;
-        $this->activa=$activa;
+        $this->activa = $activa;
     }
     /**
      * asArray

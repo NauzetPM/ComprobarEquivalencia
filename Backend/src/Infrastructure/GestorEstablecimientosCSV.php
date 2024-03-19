@@ -18,7 +18,7 @@ class GestorEstablecimientosCSV implements GestorEstablecimientos
         $this->csvfile = $csvFile;
     }
 
-    
+
     /**
      * getDatos
      *

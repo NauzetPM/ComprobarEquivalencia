@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace ComprobadorEquivalencias\Application;
 
@@ -6,9 +6,10 @@ use ComprobadorEquivalencias\Domain\ComprobadorEstado;
 use ComprobadorEquivalencias\Domain\EquivalenciasDAO;
 use ComprobadorEquivalencias\Domain\GestorEstablecimientos;
 use ComprobadorEquivalencias\Domain\ActivaDao;
+
 class ObtenerEstadoEquivalencias
 {
-    private GestorEstablecimientos $gestorFicheroCSV;
+    private GestorEstablecimientos $gestorEstablecimientos;
     private EquivalenciasDAO $equivalenciasDao;
 
     private ActivaDao $activaDao;
@@ -19,20 +20,20 @@ class ObtenerEstadoEquivalencias
     /**
      * @param int $pagina
      * @param int $registrosPorPagina
-     * @param GestorEstablecimientos $gestorFicheroCSV
+     * @param GestorEstablecimientos $gestorEstablecimientos
      * @param EquivalenciasDAO $equivalenciasDao
      * @param array $filtros
      */
     public function __construct(
-        GestorEstablecimientos $gestorFicheroCSV,
+        GestorEstablecimientos $gestorEstablecimientos,
         EquivalenciasDAO $equivalenciasDAO,
         ActivaDao $activaDao,
         array $filtros = array()
     ) {
-        $this->gestorFicheroCSV = $gestorFicheroCSV;
+        $this->gestorEstablecimientos = $gestorEstablecimientos;
         $this->equivalenciasDao = $equivalenciasDAO;
         $this->filtros = $filtros;
-        $this->activaDao=$activaDao;
+        $this->activaDao = $activaDao;
     }
 
 
@@ -44,8 +45,13 @@ class ObtenerEstadoEquivalencias
     {
 
         $respuesta = "";
-        $datos = $this->gestorFicheroCSV->getDatos();
-        $Comprobador = new ComprobadorEstado($datos["datos"], $this->equivalenciasDao,$this->activaDao);
+        $datos = $this->gestorEstablecimientos->getDatos();
+        $Comprobador = new ComprobadorEstado
+        (
+            $datos["datos"],
+            $this->equivalenciasDao,
+            $this->activaDao
+        );
         $respuesta = $Comprobador->getEstados();
         return $respuesta;
     }

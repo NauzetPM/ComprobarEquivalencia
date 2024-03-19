@@ -1,15 +1,34 @@
 <?php
 namespace ComprobadorEquivalencias\Application;
+
 use ComprobadorEquivalencias\Domain\GestorSelector;
 
 class ObtenerSeleccion
 {
     private $gestorSelector;
-    public function __construct(GestorSelector $gestorSelector){
-        $this->gestorSelector=$gestorSelector;
+    private $nombreEmpresa;
+    /**
+     * __construct
+     *
+     * @param  GestorSelector $gestorSelector
+     * @param  string $nombreEmpresa
+     * @return void
+     */
+    public function __construct(
+        GestorSelector $gestorSelector,
+        string $nombreEmpresa
+    ) {
+        $this->gestorSelector = $gestorSelector;
+        $this->nombreEmpresa = $nombreEmpresa;
     }
-    public function __invoke(string $nombreEmpresa){
-        $parametrosBBDD = $this->gestorSelector->obtenerCorrespondencias($nombreEmpresa);
+    /**
+     * __invoke
+     *
+     * @return array
+     */
+    public function __invoke(): array
+    {
+        $parametrosBBDD = $this->gestorSelector->obtenerCorrespondencias($this->nombreEmpresa);
         return $parametrosBBDD;
     }
 }

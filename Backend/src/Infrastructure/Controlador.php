@@ -4,19 +4,15 @@ namespace ComprobadorEquivalencias\Infrastructure;
 use ComprobadorEquivalencias\Application\ObtenerEstadoEquivalencias;
 use ComprobadorEquivalencias\Application\ObtenerSeleccion;
 use Dotenv\Dotenv;
-$dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
-$dotenv->load();
+
 class Controlador
 {
     private array $parametros;
-    private $database;
     private $cacheManager;
-    private $NombreTabla1;
-    private $NombreTabla2;
-    private $dbName;
-    private $rutaCache = __DIR__ ."/../../cache/";
+    private $rutaCache = __DIR__ . "/../../cache/";
 
-    private $rutaFiles = __DIR__ ."/../../files/";
+    private $rutaFiles = __DIR__ . "/../../files/";
+    private $rutaTemporales = __DIR__ . "/../../temporales/";
 
     /**
      * __construct
@@ -28,127 +24,130 @@ class Controlador
     {
         $this->cacheManager = new CacheManager($this->rutaCache);
 
-        global $dotenv;
-        
+        $dotenv = Dotenv::createImmutable(__DIR__ . '/../../');
+        $dotenv->load();
+
         $this->parametros = $parametros;
         $limpiadorFiles = new FileCleaner();
         $limpiadorFiles->cleanOldFiles($this->rutaFiles);
         $limpiadorFiles->cleanOldFiles($this->rutaCache);
+        $limpiadorFiles->cleanOldFiles($this->rutaTemporales);
 
-        $this->database = new Database($_ENV['BBDD_HOST'], $_ENV['BBDD_USER'], $_ENV['BBDD_PASS'], $_ENV['BBDD_DATABASE_CONFIG'], $_ENV['BBDD_PORT']);
-        $selector = new GestorSelectorMysql($this->database);
-        $caso_de_uso = new ObtenerSeleccion(
-            $selector
-        );
-        if (!isset ($this->parametros["NombreMayorista"])) {
-            return ([
-                "status" => "KO",
-                "error" => "No se ha recivido Nombre Mayorista"
-            ]);
-        }
-        $parametrosBBDD = $caso_de_uso($this->parametros["NombreMayorista"]);
-
-        $this->dbName = $parametrosBBDD["conexion"];
-
-        $this->NombreTabla1 = $parametrosBBDD["tabla1"];
-
-        $this->NombreTabla2 = $parametrosBBDD["tabla2"];
     }
 
-    
+
+
     /**
      * comprobarToken
      *
-     * @return void
+     * @return bool
      */
-    public function comprobarToken()
+    public function comprobarToken(): bool
     {
-        $token = $this->parametros['token'];
-        if (isset ($token)) {
-            $return = $this->cacheManager->comprobarToken($token);
-            return $return;
+        if (!isset ($this->parametros['token'])) {
+            throw new \Exception('No se ha recibido token');
         }
-        return null;
+        $token = $this->parametros['token'];
+        $return = $this->cacheManager->esTokenValido($token);
+        return $return;
+        
     }
+
     /**
      * comprobarFichero
      *
-     * @return void
+     * @return array
      */
-    public function comprobarFichero()
+    public function subirFichero(): array
     {
-
-        if (isset ($this->parametros['token'])) {
-            $this->cacheManager->guardarToken($this->parametros['token'], $this->parametros['token']);
+        if(!isset($this->parametros["totalChunks"]) || !isset($this->parametros["chunkIndex"])){
+            throw new \Exception('No se ha recibido totalChunks o chunkIndex');
         }
+        if($this->parametros["totalChunks"]==$this->parametros["chunkIndex"]+1){
+            if (!isset ($this->parametros['token'])) {
+                throw new \Exception('No se ha recibido token');
+            }
+            $this->cacheManager->guardarToken($this->parametros['token'], $this->parametros['token']);
+            return ([
+                "status" => "OK",
+                "code" => "Reconstruccion del archivo correcta y creacion del token"
+            ]);
+        }
+        return ([
+            "status" => "OK",
+            "code" => "Se subio correctamente el fragmento"
+        ]);
+
     }
     /**
      * descargar
      *
      * @return void
      */
-    public function descargar()
-    {
-        if(!isset($this->parametros["NombreFile"])){
-            return ([
-                "status" => "KO",
-                "error" => "No se ha recivido NombreFile"
-            ]);
+    public function descargar(): void
+    {   
+        if (!isset ($this->parametros['token'])) {
+            throw new \Exception('No se ha recibido token');
         }
-        $equivalenciasDao = new EquivalenciasDAOMysql($this->database, $this->NombreTabla1,$this->dbName);
-        $comprobarActiva = new ComprobarActiva($this->database, $this->NombreTabla2,$this->dbName);
-        $descargarArchivo = new DescargarArchivo();
+        if (!isset ($this->parametros["NombreMayorista"])) {
+            throw new \Exception('No se ha recibido Nombre Mayorista');
+        }
+        if (!isset ($this->parametros["NombreFile"])) {
+            throw new \Exception('No se ha recibido NombreFile');
+        }
+        $database = new Database($_ENV['BBDD_HOST'], $_ENV['BBDD_USER'], $_ENV['BBDD_PASS'], $_ENV['BBDD_DATABASE_CONFIG'], $_ENV['BBDD_PORT']);
+        $selector = new GestorSelectorMysql($database);
 
-        $rutaArchivoCompleto = $this->rutaFiles . $this->parametros["NombreFile"];
-        
+
+        $BBDDSelector = new ObtenerSeleccion(
+            $selector,
+            $this->parametros["NombreMayorista"]
+        );
+
+        $parametrosBBDD = $BBDDSelector();
+
+        $dbName = $parametrosBBDD["conexion"];
+
+        $NombreTabla1 = $parametrosBBDD["tabla1"];
+
+        $NombreTabla2 = $parametrosBBDD["tabla2"];
+
         $partes = explode('.', $this->parametros["NombreFile"]);
         $resultado = $partes[0];
         $extension = $partes[1];
-        $nombreArchivoDescargar = "datos_Estados" . $resultado . $extension . ".ods";
-        $gestorArchivo = new GestorArchivosOds($this->rutaFiles . $nombreArchivoDescargar);
-        $gestorFichero = null;
-        if ($extension == "csv") {
-            $gestorFichero = new GestorEstablecimientosCSV($rutaArchivoCompleto);
-        } elseif ($extension == "ods") {
-            $gestorFichero = new GestorEstablecimientosODS($rutaArchivoCompleto);
-        } elseif ($extension == "xlsx") {
-            $gestorFichero = new GestorEstablecimientosXLSX($rutaArchivoCompleto);
-        } else {
-            echo "Tipo de archivo no valido";
-            die;
-        }
 
+        $nombreArchivoDescargar = $this->parametros['token'] . ".ods";
+        $gestorArchivo = new GestorArchivosOds($this->rutaFiles, $nombreArchivoDescargar);
         if (!file_exists($this->rutaFiles . $nombreArchivoDescargar)) {
-            sleep(4);
+            $equivalenciasDao = new EquivalenciasDAOMysql($database, $NombreTabla1, $dbName);
+            $comprobarActiva = new ComprobarActiva($database, $NombreTabla2, $dbName);
+            $rutaArchivoCompleto = $this->rutaFiles . $this->parametros["NombreFile"];
+            $gestorEstablecimientos = null;
+            if ($extension == "csv") {
+                $gestorEstablecimientos = new GestorEstablecimientosCSV($rutaArchivoCompleto);
+            } elseif ($extension == "ods") {
+                $gestorEstablecimientos = new GestorEstablecimientosODS($rutaArchivoCompleto);
+            } elseif ($extension == "xlsx") {
+                $gestorEstablecimientos = new GestorEstablecimientosXLSX($rutaArchivoCompleto);
+            } else {
+                throw new \Exception('Tipo de archivo no valido');
+            }
             while (!file_exists($rutaArchivoCompleto)) {
                 sleep(1);
             }
             $filtros = $this->parametros;
-            $caso_de_uso = new ObtenerEstadoEquivalencias(
+            $obtenerEquivalencias = new ObtenerEstadoEquivalencias(
 
-                $gestorFichero,
+                $gestorEstablecimientos,
                 $equivalenciasDao,
                 $comprobarActiva,
                 $filtros
             );
-            $datos = $caso_de_uso();
-            unset($caso_de_uso);
+            $datos = $obtenerEquivalencias();
+            unset($obtenerEquivalencias);
 
-            $gestorArchivo->crearArchivoOds($datos);
-            unset($datos);
+            $gestorArchivo->crearArchivo($datos);
         }
-        $intentos = 0;
-        $maxIntentos = 100;
-        while ($intentos < $maxIntentos) {
-            $archivo = fopen($this->rutaFiles . $nombreArchivoDescargar, "r");
-            if ($archivo !== false) {
-                fclose($archivo);
-                sleep(5);
-                break;
-            }
-            sleep(1);
-            $intentos++;
-        }
-        $descargarArchivo->descargarArchivo($nombreArchivoDescargar);
+        $gestorArchivo->descargarArchivo($this->rutaFiles, $nombreArchivoDescargar);
     }
 }

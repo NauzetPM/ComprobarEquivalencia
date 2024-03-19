@@ -3,10 +3,11 @@ namespace ComprobadorEquivalencias\Infrastructure;
 
 use ComprobadorEquivalencias\Domain\GestorSelector;
 use PDO;
+
 class GestorSelectorMysql implements GestorSelector
 {
     private $pdo;
-    
+
     /**
      * __construct
      *
@@ -24,11 +25,10 @@ class GestorSelectorMysql implements GestorSelector
      * @return array
      */
     public function obtenerCorrespondencias(string $nombre): array
-    {   
-        //añadir la otra tabla
-        $sql="SELECT conexion,tabla1,tabla2 " 
-        ." FROM EquivalenciasEstablecimientos " 
-        ." WHERE mayorista = :mayorista";
+    {
+        $sql = "SELECT conexion,tabla1,tabla2 "
+            . " FROM EquivalenciasEstablecimientos "
+            . " WHERE mayorista = :mayorista";
         $stmt = $this->pdo->prepare($sql);
         $stmt->bindParam(':mayorista', $nombre);
         $stmt->execute();
