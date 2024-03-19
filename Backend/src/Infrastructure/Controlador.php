@@ -39,7 +39,7 @@ class Controlador
 
     /**
      * comprobarToken
-     *
+     * @throws \Exception
      * @return bool
      */
     public function comprobarToken(): bool
@@ -55,7 +55,7 @@ class Controlador
 
     /**
      * comprobarFichero
-     *
+     * @throws \Exception
      * @return array
      */
     public function subirFichero(): array
@@ -79,9 +79,11 @@ class Controlador
         ]);
 
     }
+    
     /**
      * descargar
      *
+     * @throws \Exception
      * @return void
      */
     public function descargar(): void
@@ -113,7 +115,6 @@ class Controlador
         $NombreTabla2 = $parametrosBBDD["tabla2"];
 
         $partes = explode('.', $this->parametros["NombreFile"]);
-        $resultado = $partes[0];
         $extension = $partes[1];
 
         $nombreArchivoDescargar = $this->parametros['token'] . ".ods";

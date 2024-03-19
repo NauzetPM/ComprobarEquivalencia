@@ -39,11 +39,11 @@
 </template>
 
 <script>
-import axios from "axios";
-import { ipPuerto } from "../Globals.js";
+import { postCall, postWithHeadersCall } from "../Infraestructure/AxiosCalls";
 import { ElSelect, ElOption, ElProgress, ElButton } from "element-plus";
 import "element-plus/dist/index.css";
 import CryptoJS from "crypto-js";
+
 export default {
   components: {
     ElSelect,
@@ -83,7 +83,59 @@ export default {
       this.opciones = nuevasOpciones;
     },
     async subirFichero() {
-      this.progress=0;
+      this.progress = 0;
+      const sePuedeDescargar = await this.subirFicheroCall();
+      if (sePuedeDescargar) {
+        this.progress = 50;
+        await this.descargar();
+      }
+    },
+    async descargar() {
+      if (this.selectedFile) {
+        this.loading = true;
+        const formData = new FormData();
+        formData.append("service", "descargar");
+        formData.append("NombreFile", this.nombreFile);
+        formData.append("NombreMayorista", this.NombreEmpresa);
+        formData.append("token", this.token);
+        try {
+          const headers = {
+            responseType: "blob",
+            onDownloadProgress: (progressEvent) => {
+              this.progress =
+                50 +
+                Math.floor((progressEvent.loaded * 50) / progressEvent.total);
+            },
+          };
+          const progressInterval = 5000;
+          const totalIncrements = 100;
+          let increment = 50 / totalIncrements;
+
+          let currentProgress = 50;
+          const increaseProgress = () => {
+            currentProgress += increment;
+            this.progress = Math.floor(currentProgress);
+            if (currentProgress < 90) {
+              setTimeout(increaseProgress, progressInterval);
+            }
+          };
+
+          setTimeout(increaseProgress, progressInterval);
+          const response = await postWithHeadersCall(formData, headers);
+          const url = window.URL.createObjectURL(new Blob([response.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", "descarga.ods");
+          document.body.appendChild(link);
+          link.click();
+        } catch (error) {
+          console.error("Error al descargar el archivo:", error);
+        } finally {
+          this.loading = false;
+        }
+      }
+    },
+    async subirFicheroCall() {
       if (this.selectedFile) {
         this.token = this.generarTokenUnico();
         if (this.token) {
@@ -95,11 +147,7 @@ export default {
           formData.append("service", "comprobarToken");
           formData.append("token", this.token);
           formData.append("NombreMayorista", this.NombreEmpresa);
-          const respuesta = await axios.post(
-            `http://${ipPuerto}/prueba.php`,
-            formData
-          );
-
+          const respuesta = await postCall(formData);
           if (respuesta.data == false) {
             if (this.NombreEmpresa !== "") {
               try {
@@ -123,10 +171,12 @@ export default {
                   if (chunkIndex == totalChunks - 1) {
                     formData.append("token", this.token);
                   }
-                  await axios.post(`http://${ipPuerto}/prueba.php`, formData);
-                  this.progress = Math.floor(
-                    ((chunkIndex + 1) * 50) / totalChunks
-                  );
+                  await postCall(formData);
+                  if (this.progress < 50) {
+                    this.progress = Math.floor(
+                      ((chunkIndex + 1) * 50) / totalChunks
+                    );
+                  }
                 };
 
                 const reader = new FileReader();
@@ -152,46 +202,29 @@ export default {
             } else {
               alert("No se ha seleccionado el Mayorista");
             }
+          } else {
+            if (this.progress < 50) {
+              const progressInterval = 1000;
+              const totalIncrements = 10;
+              let increment = 50 / totalIncrements;
+
+              let currentProgress = 0;
+              const increaseProgress = () => {
+                currentProgress += increment;
+                this.progress = Math.floor(currentProgress);
+                if (currentProgress < 50 && this.progress < 50) {
+                  setTimeout(increaseProgress, progressInterval);
+                }
+              };
+
+              setTimeout(increaseProgress, progressInterval);
+            }
           }
         }
-
-        await this.descargar();
+        return true;
       } else {
         alert("No se ha seleccionado el archivo");
-      }
-    },
-    async descargar() {
-      if (this.selectedFile) {
-        this.loading = true;
-        const formData = new FormData();
-        formData.append("service", "descargar");
-        formData.append("NombreFile", this.nombreFile);
-        formData.append("NombreMayorista", this.NombreEmpresa);
-        formData.append("token", this.token);
-        try {
-          const response = await axios.post(
-            `http://${ipPuerto}/prueba.php`,
-            formData,
-            {
-              responseType: "blob",
-              onDownloadProgress: (progressEvent) => {
-                this.progress =
-                  50 +
-                  Math.floor((progressEvent.loaded * 50) / progressEvent.total);
-              },
-            }
-          );
-          const url = window.URL.createObjectURL(new Blob([response.data]));
-          const link = document.createElement("a");
-          link.href = url;
-          link.setAttribute("download", "descarga.ods");
-          document.body.appendChild(link);
-          link.click();
-        } catch (error) {
-          console.error("Error al descargar el archivo:", error);
-        } finally {
-          this.loading = false;
-        }
+        return false;
       }
     },
     handleFileChange(event) {

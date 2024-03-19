@@ -45,6 +45,7 @@ class Database
     /**
      * getConnection
      *
+     * @throws \Exception
      * @return PDO
      */
     private function getConnection(): PDO

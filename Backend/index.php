@@ -31,7 +31,7 @@ $verbo_http = obtenerMetodoHTTP();
 $servicio = obtenerServicio();
 $parametros = obtenerParametros();
 
-$gestorServicio = comprobarRooter($verbo_http,$servicio);
+$gestorServicio = buscarServicioDisponible($verbo_http,$servicio);
 $controlador = $gestorServicio['controlador'];
 $funcion = $gestorServicio['funcion'];
 try {

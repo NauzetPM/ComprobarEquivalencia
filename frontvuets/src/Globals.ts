@@ -1,0 +1,1 @@
+export const ipPuerto : string= "10.1.102.40";

@@ -31,6 +31,7 @@ abstract class GestorFicheroBase
     /**
      * descargarArchivo
      *
+     * @throws \Exception
      * @param  string $nombreArchivo
      * @return void
      */

@@ -43,6 +43,7 @@ function obtenerServicio(): string
 }
 
 /**
+ * @throws Exception
  * @return array
  */
 function obtenerParametros(): array
@@ -84,7 +85,7 @@ function obtenerParametros(): array
 
             }
         } else {
-            throw new \Exception("Error al subir el fragmento: " . $_FILES['chunk']['error']);
+            throw new Exception("Error al subir el fragmento: " . $_FILES['chunk']['error']);
         }
 
     }
@@ -99,7 +100,7 @@ function obtenerParametros(): array
 /**
  * @return array
  */
-function comprobarRooter($verbo_http, $servicio): array
+function buscarServicioDisponible($verbo_http, $servicio): array
 {
     /* AÑADIR LOS WEB SERVICES */
     $router = [
