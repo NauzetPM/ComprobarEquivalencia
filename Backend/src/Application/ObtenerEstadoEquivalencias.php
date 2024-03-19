@@ -13,22 +13,23 @@ class ObtenerEstadoEquivalencias
     private EquivalenciasDAO $equivalenciasDao;
 
     private ActivaDao $activaDao;
-    private int $pagina;
-    private int $registrosPorPagina;
     private array $filtros;
 
+    
+
     /**
-     * @param int $pagina
-     * @param int $registrosPorPagina
-     * @param GestorEstablecimientos $gestorEstablecimientos
-     * @param EquivalenciasDAO $equivalenciasDao
-     * @param array $filtros
-     */
-    public function __construct(
-        GestorEstablecimientos $gestorEstablecimientos,
-        EquivalenciasDAO $equivalenciasDAO,
-        ActivaDao $activaDao,
-        array $filtros = array()
+     * __construct
+     *
+     * @param  mixed $gestorEstablecimientos
+     * @param  mixed $equivalenciasDAO
+     * @param  mixed $activaDao
+     * @param  mixed $filtros
+     * @return void
+     */    
+    public function __construct(GestorEstablecimientos $gestorEstablecimientos,
+    EquivalenciasDAO $equivalenciasDAO,
+    ActivaDao $activaDao,
+    array $filtros = array()
     ) {
         $this->gestorEstablecimientos = $gestorEstablecimientos;
         $this->equivalenciasDao = $equivalenciasDAO;

@@ -29,7 +29,7 @@ class CacheManager
      */
     public function guardarToken($key, $value): void
     {
-        $filename = $this->getCacheFileName($key);
+        $filename = $this->cacheDir . '/' . $key;
         file_put_contents($filename, $value);
     }
 
@@ -42,7 +42,7 @@ class CacheManager
      */
     public function esTokenValido($key, $expiry = 180): bool
     {
-        $filename = $this->getCacheFileName($key);
+        $filename = $this->cacheDir . '/' . $key;
         if (file_exists($filename)) {
             $filemtime = filemtime($filename);
             if (time() - $filemtime <= $expiry) {
@@ -54,15 +54,4 @@ class CacheManager
         return false;
     }
 
-
-    /**
-     * getCacheFileName
-     *
-     * @param  string $key
-     * @return string
-     */
-    private function getCacheFileName($key): string
-    {
-        return $this->cacheDir . '/' . md5($key);
-    }
 }

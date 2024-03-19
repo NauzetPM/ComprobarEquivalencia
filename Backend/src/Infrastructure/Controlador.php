@@ -121,7 +121,7 @@ class Controlador
         $gestorArchivo = new GestorArchivosOds($this->rutaFiles, $nombreArchivoDescargar);
         if (!file_exists($this->rutaFiles . $nombreArchivoDescargar)) {
             $equivalenciasDao = new EquivalenciasDAOMysql($database, $NombreTabla1, $dbName);
-            $comprobarActiva = new ComprobarActiva($database, $NombreTabla2, $dbName);
+            $comprobarActiva = new ActivaDaoMysql($database, $NombreTabla2, $dbName);
             $rutaArchivoCompleto = $this->rutaFiles . $this->parametros["NombreFile"];
             $gestorEstablecimientos = null;
             if ($extension == "csv") {
