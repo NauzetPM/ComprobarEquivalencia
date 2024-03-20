@@ -5,14 +5,13 @@ use ComprobadorEquivalencias\Domain\GestorSelector;
 
 class ObtenerSeleccion
 {
-    private $gestorSelector;
-    private $nombreEmpresa;
+    private GestorSelector $gestorSelector;
+    private string $nombreEmpresa;
     /**
      * __construct
      *
      * @param  GestorSelector $gestorSelector
      * @param  string $nombreEmpresa
-     * @return void
      */
     public function __construct(
         GestorSelector $gestorSelector,

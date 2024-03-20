@@ -7,14 +7,14 @@ use PDOException;
 class Database
 {
 
-    private $host;
-    private $user;
-    private $pass;
-    private $dbName;
-    private $dbPort;
+    private string $host;
+    private string $user;
+    private string $pass;
+    private string $dbName;
+    private string $dbPort;
 
 
-    public $connection;
+    public PDO $connection;
 
     /**
      * __construct
@@ -24,7 +24,7 @@ class Database
      * @param  string $pass
      * @param  string $dbName
      * @param  string $dbPort
-     * @return void
+     * @throws \Exception
      */
     public function __construct(
         string $host,

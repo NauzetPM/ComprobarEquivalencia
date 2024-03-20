@@ -6,15 +6,16 @@ use PDO;
 
 class EquivalenciasDAOMysql implements EquivalenciasDAO
 {
-    private $tabla;
-    private $pdo;
-    private $db;
+    private string $tabla;
+    private PDO $pdo;
+    private string $db;
+
     /**
      * __construct
      *
      * @param  Database $db
      * @param  string $tabla
-     * @return void
+     * @param  string $dbName
      */
     public function __construct(Database $db, string $tabla, string $dbName)
     {

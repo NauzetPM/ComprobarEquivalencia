@@ -5,17 +5,16 @@ use ComprobadorEquivalencias\Domain\GestorEstablecimientos;
 
 class GestorEstablecimientosCSV implements GestorEstablecimientos
 {
-    private $csvfile;
-    private $lenght = 1000;
+    private string $csvfilePath;
+    private int $lenght = 1000;
     /**
      * __construct
      *
-     * @param  string $csvFile
-     * @return void
+     * @param  string $csvfilePath
      */
-    public function __construct(string $csvFile)
+    public function __construct(string $csvfilePath)
     {
-        $this->csvfile = $csvFile;
+        $this->csvfilePath = $csvfilePath;
     }
 
 
@@ -28,7 +27,7 @@ class GestorEstablecimientosCSV implements GestorEstablecimientos
     {
         $datosCSV = array();
         $total = 0;
-        if (($gestor = fopen($this->csvfile, "r")) !== FALSE) {
+        if (($gestor = fopen($this->csvfilePath, "r")) !== FALSE) {
             while (($datos = fgetcsv($gestor, $this->lenght, ",")) !== FALSE) {
                 $datosExpode = explode("|", $datos[0]);
                 $datosCSV[] = $datosExpode;

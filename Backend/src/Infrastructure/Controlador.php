@@ -8,17 +8,16 @@ use Dotenv\Dotenv;
 class Controlador
 {
     private array $parametros;
-    private $cacheManager;
-    private $rutaCache = __DIR__ . "/../../cache/";
+    private CacheManager $cacheManager;
+    private string $rutaCache = __DIR__ . "/../../cache/";
 
-    private $rutaFiles = __DIR__ . "/../../files/";
-    private $rutaTemporales = __DIR__ . "/../../temporales/";
+    private string $rutaFiles = __DIR__ . "/../../files/";
+    private string $rutaTemporales = __DIR__ . "/../../temporales/";
 
     /**
      * __construct
      *
      * @param  array $parametros
-     * @return void
      */
     public function __construct(array $parametros)
     {

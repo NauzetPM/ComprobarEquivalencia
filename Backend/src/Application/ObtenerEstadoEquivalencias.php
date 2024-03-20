@@ -20,16 +20,16 @@ class ObtenerEstadoEquivalencias
     /**
      * __construct
      *
-     * @param  mixed $gestorEstablecimientos
-     * @param  mixed $equivalenciasDAO
-     * @param  mixed $activaDao
-     * @param  mixed $filtros
-     * @return void
+     * @param  GestorEstablecimientos $gestorEstablecimientos
+     * @param  EquivalenciasDAO $equivalenciasDAO
+     * @param  ActivaDao $activaDao
+     * @param  array $filtros
      */    
-    public function __construct(GestorEstablecimientos $gestorEstablecimientos,
+    public function __construct(
+    GestorEstablecimientos $gestorEstablecimientos,
     EquivalenciasDAO $equivalenciasDAO,
     ActivaDao $activaDao,
-    array $filtros = array()
+    array $filtros,
     ) {
         $this->gestorEstablecimientos = $gestorEstablecimientos;
         $this->equivalenciasDao = $equivalenciasDAO;

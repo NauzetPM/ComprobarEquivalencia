@@ -7,15 +7,15 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class GestorEstablecimientosXLSX implements GestorEstablecimientos
 {
-    private $xlsxFile;
+    private string $xlsxFilePath;
 
     /**
      *
-     * @param  string $xlsxFile
+     * @param  string $xlsxFilePath
      */
-    public function __construct(string $xlsxFile)
+    public function __construct(string $xlsxFilePath)
     {
-        $this->xlsxFile = $xlsxFile;
+        $this->xlsxFilePath = $xlsxFilePath;
     }
 
     /**
@@ -27,7 +27,7 @@ class GestorEstablecimientosXLSX implements GestorEstablecimientos
         $datosXLSX = [];
         $total = 0;
 
-        $spreadsheet = IOFactory::load($this->xlsxFile);
+        $spreadsheet = IOFactory::load($this->xlsxFilePath);
 
         $sheet = $spreadsheet->getActiveSheet();
 

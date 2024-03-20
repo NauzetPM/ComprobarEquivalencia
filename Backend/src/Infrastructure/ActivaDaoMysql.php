@@ -11,13 +11,13 @@ class  ActivaDaoMysql  implements ActivaDao
 
     private $db;
 
-
+ 
     /**
      * __construct
      *
      * @param  Database $db
      * @param  string $tabla
-     * @return void
+     * @param  string $dbName
      */
     public function __construct(Database $db, string $tabla, string $dbName)
     {

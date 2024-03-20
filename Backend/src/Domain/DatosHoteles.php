@@ -3,10 +3,10 @@ namespace ComprobadorEquivalencias\Domain;
 
 class DatosHoteles
 {
-    private $codigo;
-    private $nombre;
-    private $estado;
-    private $activa;
+    private string $codigo;
+    private string $nombre;
+    private string $estado;
+    private string $activa;
     const ESTADO_PENDIENTE = "Pendiente";
     const ESTADO_MAPEADO = "Mapeado";
     const ESTADO_BLOCK = "Mapeado Block";
@@ -24,7 +24,6 @@ class DatosHoteles
      * @param  string $nombre
      * @param  string $estado
      * @param string $activa
-     * @return void
      */
     public function __construct(
         string $codigo,

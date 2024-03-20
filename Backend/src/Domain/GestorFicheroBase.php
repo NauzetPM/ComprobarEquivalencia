@@ -3,15 +3,23 @@ namespace ComprobadorEquivalencias\Domain;
 
 abstract class GestorFicheroBase
 {
-
-    abstract public function crearArchivo($datos): void;
+    
+    /**
+     * crearArchivo
+     *
+     * @param  array $datos
+     * @return void
+     */
+    abstract public function crearArchivo(array $datos): void;
 
     /**
      * esArchivoCreado
      *
+     * @param  string $filePath
+     * @param  string $nombreArchivo
      * @return bool
      */
-    private function esArchivoCreado($filePath, $nombreArchivo): bool
+    private function esArchivoCreado(string $filePath,string $nombreArchivo): bool
     {
         $intentos = 0;
         $maxIntentos = 100;
@@ -32,6 +40,7 @@ abstract class GestorFicheroBase
      * descargarArchivo
      *
      * @throws \Exception
+     * @param  string $fileRut
      * @param  string $nombreArchivo
      * @return void
      */

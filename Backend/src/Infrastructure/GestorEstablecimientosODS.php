@@ -6,17 +6,16 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 
 class GestorEstablecimientosODS implements GestorEstablecimientos
 {
-    private $odsFile;
+    private string $odsFilePath;
 
     /**
      * __construct
      *
-     * @param  mixed $odsFile
-     * @return void
+     * @param  string $odsFilePath
      */
-    public function __construct(string $odsFile)
+    public function __construct(string $odsFilePath)
     {
-        $this->odsFile = $odsFile;
+        $this->odsFilePath = $odsFilePath;
     }
 
     /**
@@ -29,7 +28,7 @@ class GestorEstablecimientosODS implements GestorEstablecimientos
         $datosODS = array();
         $total = 0;
 
-        $objPHPExcel = IOFactory::load($this->odsFile);
+        $objPHPExcel = IOFactory::load($this->odsFilePath);
 
         $sheet = $objPHPExcel->getActiveSheet();
 

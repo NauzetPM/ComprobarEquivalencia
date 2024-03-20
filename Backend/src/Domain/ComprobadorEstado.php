@@ -4,7 +4,7 @@ namespace ComprobadorEquivalencias\Domain;
 class ComprobadorEstado
 {
     private EquivalenciasDAO $equivalenciaDAO;
-    private $datosArchivo;
+    private array $datosArchivo;
 
     private ActivaDao $activaDao;
 
@@ -14,12 +14,11 @@ class ComprobadorEstado
      * @param  array  $datosArchivo
      * @param  EquivalenciasDAO $estadoDAO
      * @param ActivaDao $activa
-     * @return void
      */
     public function __construct(
         array $datosArchivo,
-        $estadoDAO,
-        $activa
+        EquivalenciasDAO $estadoDAO,
+        ActivaDao $activa
     ) {
         $this->equivalenciaDAO = $estadoDAO;
         $this->datosArchivo = $datosArchivo;

@@ -6,13 +6,12 @@ use PDO;
 
 class GestorSelectorMysql implements GestorSelector
 {
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * __construct
      *
      * @param  Database $db
-     * @return void
      */
     public function __construct(Database $db)
     {

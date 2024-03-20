@@ -97,10 +97,15 @@ function obtenerParametros(): array
 
     return $parametros;
 }
+
 /**
+ * buscarServicioDisponible
+ *
+ * @param  string $verbo_http
+ * @param  string $servicio
  * @return array
  */
-function buscarServicioDisponible($verbo_http, $servicio): array
+function buscarServicioDisponible(string $verbo_http, string $servicio): array
 {
     /* AÑADIR LOS WEB SERVICES */
     $router = [

@@ -7,7 +7,6 @@ class FileCleaner
     /**
      * __construct
      *
-     * @return void
      */
     public function __construct()
     {
@@ -19,7 +18,7 @@ class FileCleaner
      * @param  string $directory
      * @return void
      */
-    public function cleanOldFiles($directory): void
+    public function cleanOldFiles(string $directory): void
     {
         //$fecha_limite = strtotime('-3 hours');
         //$fecha_limite = strtotime('-3 days');

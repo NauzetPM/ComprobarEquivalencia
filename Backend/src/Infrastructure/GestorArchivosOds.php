@@ -11,18 +11,19 @@ use ComprobadorEquivalencias\Domain\GestorFicheroBase;
 
 class GestorArchivosOds extends GestorFicheroBase
 {
-    private $filePath;
-    private $spreadsheet;
+    private string $filePath;
+    private Spreadsheet $spreadsheet;
 
-    private $nombreArchivo;
+    private string $nombreArchivo;
 
+    
     /**
      * __construct
      *
      * @param  string $filePath
-     * @return void
+     * @param  string $nombreArchivo
      */
-    public function __construct($filePath, $nombreArchivo)
+    public function __construct(string $filePath, string $nombreArchivo)
     {
         $this->filePath = $filePath;
         $this->nombreArchivo = $nombreArchivo;
@@ -35,7 +36,7 @@ class GestorArchivosOds extends GestorFicheroBase
      * @param  array $datos
      * @return void
      */
-    public function crearArchivo($datos): void
+    public function crearArchivo(array $datos): void
     {
         $hoja = $this->spreadsheet->getActiveSheet();
 
