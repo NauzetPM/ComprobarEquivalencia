@@ -42,15 +42,16 @@ class CacheManager
     public function esTokenValido(string $key, int $expiry = 180): bool
     {
         $filename = $this->cacheDir . '/' . $key;
-        if (file_exists($filename)) {
-            $filemtime = filemtime($filename);
-            if (time() - $filemtime <= $expiry) {
-                return true;
-            } else {
-                unlink($filename);
-            }
+        if (!file_exists($filename)) {
+            return false;
         }
-        return false;
+        $filemtime = filemtime($filename);
+        if (time() - $filemtime <= $expiry) {
+            return true;
+        }
+        unlink($filename);
+        return false;        
+        
     }
 
 }

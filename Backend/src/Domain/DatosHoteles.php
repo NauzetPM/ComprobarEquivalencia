@@ -10,13 +10,17 @@ class DatosHoteles
     const ESTADO_PENDIENTE = "Pendiente";
     const ESTADO_MAPEADO = "Mapeado";
     const ESTADO_BLOCK = "Mapeado Block";
+    const ACTIVA = "Si";
+    const NO_ACTIVA = "No";
+    const NO_DESCARGADA = "No descargada";
 
-    const Activa = "Si";
-
-    const No_Aciva = "No";
-
-    const No_Descargada = "No descargada";
-
+    const ESTADO_MAPEADO_NO_ACTIVO= "Mapeado No Activo";
+    const ESTADO_MAPEADO_ACTIVO = "Mapeado Activo";
+    const ESTADO_MAPEADO_BLOCK_NO_ACTIVO="Mapeado Block No Activo";
+    const ESTADO_MAPEADO_BLOCK_ACTIVO="Mapeado Block Activo";
+    
+    const ESTADO_PENDIENTE_NO_ACTIVO="Pendiente No Activo";
+    const ESTADO_PENDIENTE_ACTIVO="Pendiente Activo";
     /**
      * __construct
      *

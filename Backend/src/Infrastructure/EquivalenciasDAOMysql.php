@@ -63,6 +63,7 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
         }
         return $datos;
     }
+    
 
 
 }

@@ -1,5 +1,6 @@
 <?php
 namespace ComprobadorEquivalencias\Domain;
+use Seld\JsonLint\Undefined;
 
 class ComprobadorEstado
 {
@@ -13,7 +14,7 @@ class ComprobadorEstado
      *
      * @param  array  $datosArchivo
      * @param  EquivalenciasDAO $estadoDAO
-     * @param ActivaDao $activa
+     * @param  ActivaDao $activa
      */
     public function __construct(
         array $datosArchivo,
@@ -53,47 +54,72 @@ class ComprobadorEstado
             $datoActiva = $this->activaDao->comprobarActiva($this->datosArchivo[$c][0]);
             $Codigo = $this->datosArchivo[$c][0];
             $Nombre = $this->datosArchivo[$c][1];
+            $Estado="";
+            $estaDescargado = $datoActiva['total'] > 0;
+            $estaActivo = $datoActiva['activo'] == 1;
+
+
             if ($datoActiva['total'] == 0) {
                 $noDescargados++;
-                $Activa = DatosHoteles::No_Descargada;
+                $Activa = DatosHoteles::NO_DESCARGADA;
+                $datosHotel = new DatosHoteles($Codigo, $Nombre, $Estado, $Activa);
             } else {
-                $datoEstado = $this->equivalenciaDAO->comprobarEstado($this->datosArchivo[$c][0]);
-                if ($datoActiva['activo'] == 1) {
-                    $Activa = DatosHoteles::Activa;
-                    $activaTotal++;
-                } else {
-                    $Activa = DatosHoteles::No_Aciva;
+                $datoEstado = $this->equivalenciaDAO->comprobarEstado($Codigo);
+                $totalMapeos = $datoEstado['total'];
+                $usuarioMapeo="";
+                //primer if por que si es 0 el $datoEstado["codigo"] no existe es pendiente 
+                //y el segundo if por que si saco el usuario del caso pendiente que no esta peta
+                if($totalMapeos>0){
+                if ($datoEstado["codigo"] == $this->datosArchivo[$c][0]) {
+                    $usuarioMapeo = $datoEstado["usuario"];
+                }
+                }
+                $estadoEstablecimiento=new EstadoEstablecimiento($totalMapeos,$estaActivo,$usuarioMapeo);
+                $estadoActivo=$estadoEstablecimiento->obtenerEstado();
+                if($estadoActivo==DatosHoteles::ESTADO_MAPEADO_NO_ACTIVO){
+                    $mapeados++;
+                    $noActivaMapeado++;
                     $noActivaTotal++;
+                    $Estado=DatosHoteles::ESTADO_MAPEADO;
+                    $Activa=DatosHoteles::ACTIVA;
                 }
-                if ($datoEstado['total'] == 0) {
+                if($estadoActivo==DatosHoteles::ESTADO_MAPEADO_ACTIVO){
+                    $mapeados++;
+                    $activaMapeado++;
+                    $activaTotal++;
+                    $Estado=DatosHoteles::ESTADO_MAPEADO;
+                    $Activa=DatosHoteles::NO_ACTIVA;
+                }
+                if($estadoActivo== DatosHoteles::ESTADO_MAPEADO_BLOCK_ACTIVO){
+                    $mapeadosBlock++;
+                    $activaBlock++;
+                    $activaTotal++;
+                    $Estado=DatosHoteles::ESTADO_BLOCK;
+                    $Activa=DatosHoteles::ACTIVA;
+                }
+                if($estadoActivo== DatosHoteles::ESTADO_MAPEADO_BLOCK_NO_ACTIVO){
+                    $mapeadosBlock++;
+                    $noActivaBlock++;
+                    $noActivaTotal++;
+                    $Estado=DatosHoteles::ESTADO_BLOCK;
+                    $Activa=DatosHoteles::NO_ACTIVA;
+                }
+                if($estadoActivo==DatosHoteles::ESTADO_PENDIENTE_ACTIVO){
                     $pendientes++;
-                    $Estado = DatosHoteles::ESTADO_PENDIENTE;
-                    if ($datoActiva['activo'] == 1) {
-                        $activaPendiente++;
-                    } else {
-                        $noActivaPendiente++;
-                    }
-                } elseif ($datoEstado["codigo"] == $this->datosArchivo[$c][0]) {
-                    if ($datoEstado["usuario"] == "casamientoBlock") {
-                        $Estado = DatosHoteles::ESTADO_BLOCK;
-                        $mapeadosBlock++;
-                        if ($datoActiva['activo'] == 1) {
-                            $activaBlock++;
-                        } else {
-                            $noActivaBlock++;
-                        }
-                    } else {
-                        if ($datoActiva['activo'] == 1) {
-                            $activaMapeado++;
-                        } else {
-                            $noActivaMapeado++;
-                        }
-                        $Estado = DatosHoteles::ESTADO_MAPEADO;
-                        $mapeados++;
-                    }
+                    $activaPendiente++;
+                    $activaTotal++;
+                    $Estado=DatosHoteles::ESTADO_PENDIENTE;
+                    $Activa=DatosHoteles::ACTIVA;
                 }
+                if($estadoActivo==DatosHoteles::ESTADO_PENDIENTE_NO_ACTIVO){
+                    $pendientes++;
+                    $noActivaPendiente++;
+                    $noActivaTotal++;
+                    $Estado=DatosHoteles::ESTADO_PENDIENTE;
+                    $Activa=DatosHoteles::NO_ACTIVA;
+                }
+                $datosHotel = new DatosHoteles($Codigo, $Nombre, $Estado, $Activa);
             }
-            $datosHotel = new DatosHoteles($Codigo, $Nombre, $Estado, $Activa);
             $datos[] = $datosHotel->asArray();
         }
         return [

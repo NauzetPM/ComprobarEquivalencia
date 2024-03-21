@@ -13,18 +13,21 @@
     </form>
 
     <div class="loading-container" v-if="loading">
-      <el-progress type="circle" :percentage="progress" :color="colors"></el-progress>
+      <v-progress-circular
+      color="purple"
+      indeterminate
+    ></v-progress-circular>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { postCall, postWithHeadersCall } from "../Infraestructure/AxiosCalls";
-import { ElSelect, ElOption, ElProgress, ElButton } from "element-plus";
+import { ElSelect, ElOption, ElButton } from "element-plus";
 import "element-plus/dist/index.css";
 import CryptoJS from "crypto-js";
 import { defineComponent } from "vue";
-import { AxiosRequestConfig, AxiosProgressEvent } from "axios";
+import { AxiosRequestConfig} from "axios";
 interface Opcion {
   value: string;
   label: string;
@@ -34,7 +37,6 @@ export default defineComponent({
   components: {
     ElSelect,
     ElOption,
-    ElProgress,
     ElButton,
   },
   data() {
@@ -46,14 +48,6 @@ export default defineComponent({
       NombreEmpresa: "",
       fileExtension: "",
       loading: false,
-      progress: 0,
-      colors: [
-        { color: "#f56c6c", percentage: 20 },
-        { color: "#e6a23c", percentage: 40 },
-        { color: "#5cb87a", percentage: 60 },
-        { color: "#1989fa", percentage: 80 },
-        { color: "#6f7ad3", percentage: 100 },
-      ],
       token: "",
     };
   },
@@ -69,12 +63,8 @@ export default defineComponent({
       this.opciones = nuevasOpciones;
     },
     async subirFichero() {
-      this.progress = 0;
       this.loading = true;
       const sePuedeDescargar = await this.subirFicheroCall();
-      while (this.progress < 50) {
-          await new Promise((resolve) => setTimeout(resolve, 100));
-        }
       if (sePuedeDescargar) {
         await this.descargar();
       }
@@ -92,29 +82,7 @@ export default defineComponent({
       try {
         const headers: AxiosRequestConfig = {
           responseType: "blob",
-          onDownloadProgress: (progressEvent: AxiosProgressEvent) => {
-            if (progressEvent.total != undefined) {
-              const progress =
-                50 +
-                Math.floor((progressEvent.loaded * 50) / progressEvent.total);
-              console.log(`Progreso: ${progress}%`);
-            }
-          },
         };
-        const progressInterval = 5000;
-        const totalIncrements = 100;
-        let increment = 50 / totalIncrements;
-
-        let currentProgress = this.progress;
-        const increaseProgress = () => {
-          currentProgress += increment;
-          this.progress = Math.floor(currentProgress);
-          if (currentProgress < 90) {
-            setTimeout(increaseProgress, progressInterval);
-          }
-        };
-
-        setTimeout(increaseProgress, progressInterval);
         const response = await postWithHeadersCall(formData, headers);
         const url = window.URL.createObjectURL(new Blob([response.data]));
         const link = document.createElement("a");
@@ -155,18 +123,6 @@ export default defineComponent({
       formData.append("NombreMayorista", this.NombreEmpresa);
       const respuesta = await postCall(formData);
       if (respuesta.data == true) {
-        const progressInterval = 1000;
-        const totalIncrements = 10;
-        let increment = 50 / totalIncrements;
-        let currentProgress = 0;
-        const increaseProgress = () => {
-          currentProgress += increment;
-          this.progress = Math.floor(currentProgress);
-          if (currentProgress < 50) {
-            setTimeout(increaseProgress, progressInterval);
-          }
-        };
-        setTimeout(increaseProgress, progressInterval);
         return true;
       }
       const CHUNK_SIZE = 1024 * 1024;
@@ -175,7 +131,7 @@ export default defineComponent({
 
       const uploadChunk = async (chunk: Blob, chunkIndex: number) => {
         if (this.selectedFile == null) {
-          alert("Errir con el archivo seleccionado");
+          alert("Error con el archivo seleccionado");
           this.loading = false;
           return false;
         }
@@ -194,7 +150,6 @@ export default defineComponent({
           formData.append("token", this.token);
         }
         await postCall(formData);
-        this.progress = Math.floor(((chunkIndex + 1) * 50) / totalChunks);
       };
 
       const reader = new FileReader();

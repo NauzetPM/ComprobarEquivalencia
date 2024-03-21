@@ -20,8 +20,6 @@ class FileCleaner
      */
     public function cleanOldFiles(string $directory): void
     {
-        //$fecha_limite = strtotime('-3 hours');
-        //$fecha_limite = strtotime('-3 days');
         $fecha_limite = strtotime('-3 minutes');
         $archivos = scandir($directory);
 
@@ -31,6 +29,5 @@ class FileCleaner
                 unlink($ruta);
             }
         }
-        sleep(1);
     }
 }

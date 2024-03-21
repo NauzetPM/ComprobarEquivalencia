@@ -31,7 +31,7 @@ class Controlador
         $limpiadorFiles->cleanOldFiles($this->rutaFiles);
         $limpiadorFiles->cleanOldFiles($this->rutaCache);
         $limpiadorFiles->cleanOldFiles($this->rutaTemporales);
-
+        sleep(1);
     }
 
 

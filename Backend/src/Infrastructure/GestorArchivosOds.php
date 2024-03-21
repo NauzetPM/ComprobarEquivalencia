@@ -45,25 +45,24 @@ class GestorArchivosOds extends GestorFicheroBase
         $hoja->getColumnDimension('C')->setWidth(20);
         $hoja->getColumnDimension('D')->setWidth(20);
         $hoja->getColumnDimension('E')->setWidth(20);
-        $hoja->getColumnDimension('F')->setWidth(20);
+        $hoja->getColumnDimension('F')->setWidth(10);
         $hoja->getColumnDimension('G')->setWidth(20);
-        $hoja->getColumnDimension('H')->setWidth(20);
-        $hoja->getColumnDimension('I')->setWidth(20);
+        $hoja->getColumnDimension('H')->setWidth(25);
+        $hoja->getColumnDimension('I')->setWidth(25);
+        $hoja->getColumnDimension('J')->setWidth(25);
 
 
 
 
         $hoja->getStyle('1:1')->getFont()->setBold(true);
-        $hoja->getStyle('A1:G1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $hoja->getStyle('A1:J1')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+
         $hoja->setCellValue('A1', 'Código');
         $hoja->setCellValue('B1', 'Nombre');
         $hoja->setCellValue('C1', 'Estado');
         $hoja->setCellValue('D1', 'Activa');
         $hoja->setCellValue('E1', 'Total');
-        $hoja->setCellValue('F1', 'Mapeado');
-        $hoja->setCellValue('G1', 'Mapeado Block');
-        $hoja->setCellValue('H1', 'Pendiente');
-        $hoja->setCellValue('I1', 'No descargado');
+
         $fila = 2;
         foreach ($datos["datos"] as $dato) {
             $hoja->setCellValue('A' . $fila, $dato['Codigo']);
@@ -99,58 +98,64 @@ class GestorArchivosOds extends GestorFicheroBase
         $totalActiva = $datos["activa total"];
         $totalNoActiva = $datos["no activa total"];
         $hoja->setCellValue('E2', $total);
+        $hoja->setCellValue('E3', '100%');
+        $hoja->getStyle('E4:E4')->getFont()->setBold(true);
+        $hoja->getStyle('E4:E4')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
         $hoja->setCellValue('E4', 'Activa');
         $hoja->setCellValue('E5', $totalActiva);
-        $hoja->setCellValue('E6', 'No Activa');
-        $hoja->setCellValue('E7', $totalNoActiva);
+        $hoja->setCellValue('E6', number_format(($totalActiva / $total) * 100, 2) . '%');
+        $hoja->getStyle('E7:E7')->getFont()->setBold(true);
+        $hoja->getStyle('E7:E7')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $hoja->setCellValue('E7', 'No Activa');
+        $hoja->setCellValue('E8', $totalNoActiva);
+        $hoja->setCellValue('E9', number_format(($totalNoActiva / $total) * 100, 2) . '%');
+        $hoja->getStyle('E10:E10')->getFont()->setBold(true);
+        $hoja->getStyle('E10:E10')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
+        $hoja->setCellValue('E10', 'No descargado');
+        $noDescargado = $datos["no descargado"];
+        $hoja->setCellValue('E11', $noDescargado);
+        $hoja->setCellValue('E12', number_format(($noDescargado / $total) * 100, 2) . '%');
+        $hoja->setCellValue('H1', 'Total');
+        $hoja->setCellValue('I1', 'Activos');
+        $hoja->setCellValue('J1', 'No activos');
 
+
+        $hoja->getStyle('G1:G6')->getFont()->setBold(true);
+        $hoja->getStyle('G1:G6')->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
 
         $mapeado = $datos["mapeado"];
         $mapeadoActiva = $datos["activa mapeado"];
         $mapeadoNoActiva = $datos["no activa mapeado"];
-        $hoja->setCellValue('F2', $mapeado);
-        $hoja->setCellValue('F4', 'Activa');
-        $hoja->setCellValue('F5', $mapeadoActiva);
-        $hoja->setCellValue('F6', number_format(($mapeadoActiva / $totalActiva) * 100, 4) . '%');
-        $hoja->setCellValue('F7', 'No Activa');
-        $hoja->setCellValue('F8', $mapeadoNoActiva);
-        $hoja->setCellValue('F9', number_format(($mapeadoNoActiva / $totalNoActiva) * 100, 4) . '%');
+        $hoja->setCellValue('G2', 'Mapeado');
+        $hoja->setCellValue('H2', $mapeado."(".number_format(($mapeado / $total) * 100, 2) . '%'.")");
+        $hoja->setCellValue('I2', $mapeadoActiva."(".number_format(($mapeadoActiva / $totalActiva) * 100, 2) . '%'.")");
+        $hoja->setCellValue('J2', $mapeadoNoActiva."(".number_format(($mapeadoNoActiva / $totalNoActiva) * 100, 2) . '%'.")");
 
+        
         $block = $datos["block"];
         $blockActiva = $datos["activa block"];
         $blockNoActiva = $datos["no activa block"];
-        $hoja->setCellValue('G2', $block);
-        $hoja->setCellValue('G4', 'Activa');
-        $hoja->setCellValue('G5', $blockActiva);
-        $hoja->setCellValue('G6', number_format(($blockActiva / $totalActiva) * 100, 4) . '%');
-        $hoja->setCellValue('G7', 'No Activa');
-        $hoja->setCellValue('G8', $blockNoActiva);
-        $hoja->setCellValue('G9', number_format(($blockNoActiva / $totalNoActiva) * 100, 4) . '%');
+        $hoja->setCellValue('G4', 'Mapeado Block');
+        $hoja->setCellValue('H4', $block."(".number_format(($block / $total) * 100, 2) . '%'.")");
+        $hoja->setCellValue('I4', $blockActiva."(".number_format(($blockActiva / $totalActiva) * 100, 2) . '%'.")");
+        $hoja->setCellValue('J4', $blockNoActiva."(".number_format(($blockNoActiva / $totalNoActiva) * 100, 2) . '%'.")");
 
 
         $pendiente = $datos["pendiente"];
         $pendienteActiva = $datos["activa pendiente"];
         $pendienteNoActiva = $datos["no activa pendiente"];
-        $hoja->setCellValue('H2', $pendiente);
-        $hoja->setCellValue('H4', 'Activa');
-        $hoja->setCellValue('H5', $pendienteActiva);
-        $hoja->setCellValue('H6', number_format(($pendienteActiva / $totalActiva) * 100, 4) . '%');
-        $hoja->setCellValue('H7', 'No Activa');
-        $hoja->setCellValue('H8', $pendienteNoActiva);
-        $hoja->setCellValue('H9', number_format(($pendienteNoActiva / $totalNoActiva) * 100, 4) . '%');
+        $hoja->setCellValue('G6', 'Pendiente');
+        $hoja->setCellValue('H6', $pendiente."(".number_format(($pendiente / $total) * 100, 2) . '%'.")");
+        $hoja->setCellValue('I6', $pendienteActiva."(".number_format(($pendienteActiva / $totalActiva) * 100, 2) . '%'.")");
+        $hoja->setCellValue('J6', $pendienteNoActiva."(".number_format(($pendienteNoActiva / $totalNoActiva) * 100, 2) . '%'.")");
 
-        $noDescargado = $datos["no descargado"];
-        $hoja->setCellValue('I2', $noDescargado);
-
-
-        $hoja->setCellValue('F3', number_format(($mapeado / $total) * 100, 4) . '%');
-        $hoja->setCellValue('G3', number_format(($block / $total) * 100, 4) . '%');
-        $hoja->setCellValue('H3', number_format(($pendiente / $total) * 100, 4) . '%');
-        $hoja->setCellValue('I3', number_format(($noDescargado / $total) * 100, 4) . '%');
 
         $writer = new Ods($this->spreadsheet);
-        $writer->save($this->filePath . $this->nombreArchivo);
-
+        try {
+            $writer->save($this->filePath . $this->nombreArchivo);
+        } catch (\Throwable $e) {
+            throw new \Exception("Error no esperado: ", $e->getMessage());
+        }
     }
 
 }
