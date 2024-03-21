@@ -31,114 +31,104 @@ class ComprobadorEstado
      * @return array
      */
     public function getEstados(): array
-    {
-        $datos = array();
+    {   
+        $datos=array();
+        $estadisticas = [
+            'total' => 0,
+            'pendientes' => 0,
+            'mapeados' => 0,
+            'mapeadosBlock' => 0,
+            'noDescargados' => 0,
+            'activaTotal' => 0,
+            'activaPendiente' => 0,
+            'activaMapeado' => 0,
+            'activaBlock' => 0,
+            'noActivaTotal' => 0,
+            'noActivaMapeado' => 0,
+            'noActivaBlock' => 0,
+            'noActivaPendiente' => 0
+        ];
+    
         $total = count($this->datosArchivo);
-        $pendientes = 0;
-        $mapeados = 0;
-        $mapeadosBlock = 0;
-        $noDescargados = 0;
-
-        $activaTotal = 0;
-        $activaPendiente = 0;
-        $activaMapeado = 0;
-        $activaBlock = 0;
-
-        $noActivaTotal = 0;
-        $noActivaMapeado = 0;
-        $noActivaBlock = 0;
-        $noActivaPendiente = 0;
-
-        $Estado = "";
+    
         for ($c = 0; $c < $total; $c++) {
             $datoActiva = $this->activaDao->comprobarActiva($this->datosArchivo[$c][0]);
-            $Codigo = $this->datosArchivo[$c][0];
-            $Nombre = $this->datosArchivo[$c][1];
-            $Estado="";
+            $codigo = $this->datosArchivo[$c][0];
+            $nombre = $this->datosArchivo[$c][1];
+            $estado = "";
             $estaDescargado = $datoActiva['total'] > 0;
             $estaActivo = $datoActiva['activo'] == 1;
-
-
+    
             if ($datoActiva['total'] == 0) {
-                $noDescargados++;
-                $Activa = DatosHoteles::NO_DESCARGADA;
-                $datosHotel = new DatosHoteles($Codigo, $Nombre, $Estado, $Activa);
+                $estadisticas['noDescargados']++;
+                $estado = DatosHoteles::NO_DESCARGADA;
+                $datosHotel = new DatosHoteles($codigo, $nombre, $estado, DatosHoteles::NO_ACTIVA);
             } else {
-                $datoEstado = $this->equivalenciaDAO->comprobarEstado($Codigo);
+                $datoEstado = $this->equivalenciaDAO->comprobarEstado($codigo);
                 $totalMapeos = $datoEstado['total'];
-                $usuarioMapeo="";
-                //primer if por que si es 0 el $datoEstado["codigo"] no existe es pendiente 
-                //y el segundo if por que si saco el usuario del caso pendiente que no esta peta
-                if($totalMapeos>0){
-                if ($datoEstado["codigo"] == $this->datosArchivo[$c][0]) {
-                    $usuarioMapeo = $datoEstado["usuario"];
+                $usuarioMapeo = "";
+    
+                if ($totalMapeos > 0) {
+                    if ($datoEstado["codigo"] == $codigo) {
+                        $usuarioMapeo = $datoEstado["usuario"];
+                    }
                 }
-                }
-                $estadoEstablecimiento=new EstadoEstablecimiento($totalMapeos,$estaActivo,$usuarioMapeo);
-                $estadoActivo=$estadoEstablecimiento->obtenerEstado();
-                if($estadoActivo==DatosHoteles::ESTADO_MAPEADO_NO_ACTIVO){
-                    $mapeados++;
-                    $noActivaMapeado++;
-                    $noActivaTotal++;
-                    $Estado=DatosHoteles::ESTADO_MAPEADO;
-                    $Activa=DatosHoteles::ACTIVA;
+    
+                $estadoEstablecimiento = new EstadoEstablecimiento($totalMapeos, $estaActivo, $usuarioMapeo);
+                $estadoActivo = $estadoEstablecimiento->obtenerEstado();
+    
+                if ($estadoActivo == DatosHoteles::ESTADO_MAPEADO_NO_ACTIVO) {
+                    $estadisticas['mapeados']++;
+                    $estadisticas['noActivaMapeado']++;
+                    $estadisticas['noActivaTotal']++;
+                    $estado = DatosHoteles::ESTADO_MAPEADO;
+                    $activa = DatosHoteles::ACTIVA;
                 }
                 if($estadoActivo==DatosHoteles::ESTADO_MAPEADO_ACTIVO){
-                    $mapeados++;
-                    $activaMapeado++;
-                    $activaTotal++;
-                    $Estado=DatosHoteles::ESTADO_MAPEADO;
-                    $Activa=DatosHoteles::NO_ACTIVA;
+                    $estadisticas['mapeados']++;
+                    $estadisticas['activaMapeado']++;
+                    $estadisticas['activaTotal']++;
+                    $estado=DatosHoteles::ESTADO_MAPEADO;
+                    $activa=DatosHoteles::NO_ACTIVA;
                 }
                 if($estadoActivo== DatosHoteles::ESTADO_MAPEADO_BLOCK_ACTIVO){
-                    $mapeadosBlock++;
-                    $activaBlock++;
-                    $activaTotal++;
-                    $Estado=DatosHoteles::ESTADO_BLOCK;
-                    $Activa=DatosHoteles::ACTIVA;
+                    $estadisticas['mapeadosBlock']++;
+                    $estadisticas['activaBlock']++;
+                    $estadisticas['activaTotal']++;
+                    $estado=DatosHoteles::ESTADO_BLOCK;
+                    $activa=DatosHoteles::ACTIVA;
                 }
                 if($estadoActivo== DatosHoteles::ESTADO_MAPEADO_BLOCK_NO_ACTIVO){
-                    $mapeadosBlock++;
-                    $noActivaBlock++;
-                    $noActivaTotal++;
-                    $Estado=DatosHoteles::ESTADO_BLOCK;
-                    $Activa=DatosHoteles::NO_ACTIVA;
+                    $estadisticas['mapeadosBlock']++;
+                    $estadisticas['noActivaBlock']++;
+                    $estadisticas['noActivaTotal']++;
+                    $estado=DatosHoteles::ESTADO_BLOCK;
+                    $activa=DatosHoteles::NO_ACTIVA;
                 }
                 if($estadoActivo==DatosHoteles::ESTADO_PENDIENTE_ACTIVO){
-                    $pendientes++;
-                    $activaPendiente++;
-                    $activaTotal++;
-                    $Estado=DatosHoteles::ESTADO_PENDIENTE;
-                    $Activa=DatosHoteles::ACTIVA;
+                    $estadisticas['pendientes']++;
+                    $estadisticas['activaPendiente']++;
+                    $estadisticas['activaTotal']++;
+                    $estado=DatosHoteles::ESTADO_PENDIENTE;
+                    $activa=DatosHoteles::ACTIVA;
                 }
                 if($estadoActivo==DatosHoteles::ESTADO_PENDIENTE_NO_ACTIVO){
-                    $pendientes++;
-                    $noActivaPendiente++;
-                    $noActivaTotal++;
-                    $Estado=DatosHoteles::ESTADO_PENDIENTE;
-                    $Activa=DatosHoteles::NO_ACTIVA;
+                    $estadisticas['pendientes']++;
+                    $estadisticas['noActivaPendiente']++;
+                    $estadisticas['noActivaTotal']++;
+                    $estado=DatosHoteles::ESTADO_PENDIENTE;
+                    $activa=DatosHoteles::NO_ACTIVA;
                 }
-                $datosHotel = new DatosHoteles($Codigo, $Nombre, $Estado, $Activa);
+    
+                $datosHotel = new DatosHoteles($codigo, $nombre, $estado, $activa);
             }
+    
             $datos[] = $datosHotel->asArray();
         }
+    
+        $estadisticas['total'] = $total;
         return [
-            'total' => $total,
-            'mapeado' => $mapeados,
-            'block' => $mapeadosBlock,
-            'pendiente' => $pendientes,
-            'no descargado' => $noDescargados,
-
-            'activa total' => $activaTotal,
-            'activa pendiente' => $activaPendiente,
-            'activa mapeado' => $activaMapeado,
-            'activa block' => $activaBlock,
-
-            'no activa total' => $noActivaTotal,
-            'no activa pendiente' => $noActivaPendiente,
-            'no activa mapeado' => $noActivaMapeado,
-            'no activa block' => $noActivaBlock,
-
+            'estadisticas' => $estadisticas,
             'datos' => $datos
         ];
     }
