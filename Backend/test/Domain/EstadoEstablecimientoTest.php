@@ -114,7 +114,7 @@ class EstadoEstablecimientoTest extends TestCase
     {
         $totalMapeos = 1;
         $estaActivo = true;
-        $usuarioMapeo = 'casamientoBlock';
+        $usuarioMapeo = DatosHoteles::USUARIO_MAPEADO_BLOCK;
 
         $instancia = new EstadoEstablecimiento(
             $totalMapeos,
@@ -138,7 +138,7 @@ class EstadoEstablecimientoTest extends TestCase
     {
         $totalMapeos = 1;
         $estaActivo = false;
-        $usuarioMapeo = 'casamientoBlock';
+        $usuarioMapeo = DatosHoteles::USUARIO_MAPEADO_BLOCK;
 
         $instancia = new EstadoEstablecimiento(
             $totalMapeos,

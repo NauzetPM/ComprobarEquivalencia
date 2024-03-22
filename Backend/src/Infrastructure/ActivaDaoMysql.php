@@ -3,6 +3,7 @@
 namespace ComprobadorEquivalencias\Infrastructure;
 
 use ComprobadorEquivalencias\Domain\ActivaDao;
+use ComprobadorEquivalencias\Domain\ActivaDaoDatos;
 use PDO;
 
 class  ActivaDaoMysql  implements ActivaDao
@@ -46,7 +47,7 @@ class  ActivaDaoMysql  implements ActivaDao
      * @param  string $codigo
      * @return array
      */
-    public function comprobarDescargadaActiva(string $codigo): array
+    public function comprobarDescargadaActiva(string $codigo): ActivaDaoDatos
     {
         $sql = "SELECT COUNT(*) as total,codigo,activo "
             . " FROM " . $this->db . "." . $this->tabla . " "
@@ -61,6 +62,7 @@ class  ActivaDaoMysql  implements ActivaDao
                 "total" => 0,
             ];
         }
-        return $datos;
+        $datosDevolver = ActivaDaoDatos::fromArray($datos);
+        return $datosDevolver;
     }
 }

@@ -19,7 +19,7 @@ class FileCleaner
      */
     public function cleanOldFiles(string $directory): void
     {
-        $fecha_limite = strtotime('-10 minutes');
+        $fecha_limite = strtotime('-1 minutes');
         $archivos = scandir($directory);
 
         foreach ($archivos as $archivo) {

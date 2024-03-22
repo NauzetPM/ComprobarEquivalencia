@@ -40,14 +40,17 @@ class Controlador
      * @throws \Exception
      * @return bool
      */
-    public function comprobarToken(): bool
+    public function comprobarToken(): array
     {
         if (!isset($this->parametros['token'])) {
             throw new \Exception('No se ha recibido token');
         }
         $token = $this->parametros['token'];
         $return = $this->cacheManager->esTokenValido($token);
-        return $return;
+        return ([
+            "status" => "OK",
+            "tokenValido" => $return
+        ]);
     }
 
     /**
@@ -133,8 +136,8 @@ class Controlador
                 throw new \Exception('Tipo de archivo no valido');
             }
             unset($extension);
-            while (!file_exists($rutaArchivoCompleto)) {
-                sleep(1);
+            if (!file_exists($rutaArchivoCompleto)) {
+                throw new \Exception('Tipo de archivo no valido');
             }
             $obtenerEquivalencias = new ObtenerEstadoEquivalencias(
 

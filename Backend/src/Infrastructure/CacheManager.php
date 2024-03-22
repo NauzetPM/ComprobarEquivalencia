@@ -36,7 +36,7 @@ class CacheManager
      * @param  int $expiry
      * @return bool
      */
-    public function esTokenValido(string $key, int $expiry = 10): bool
+    public function esTokenValido(string $key, int $expiry = 1): bool
     {
         $filename = $this->cacheDir . '/' . $key;
         if (!file_exists($filename)) {

@@ -11,7 +11,7 @@ interface ActivaDao
 
     /**
      * @param string $codigo
-     * @return array
+     * @return ActivaDaoDatos
      */
-    public function comprobarDescargadaActiva(string $codigo): array;
+    public function comprobarDescargadaActiva(string $codigo): ActivaDaoDatos;
 }

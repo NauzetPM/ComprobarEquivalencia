@@ -59,9 +59,9 @@ class ComprobadorEstado
             $datoDescargadaActiva = $this->activaDao->comprobarDescargadaActiva($codigo);
             $estado = "";
 
-            $estaActivo = $datoDescargadaActiva['activo'] == 1;
+            $estaActivo = $datoDescargadaActiva->getactiva();
 
-            if ($datoDescargadaActiva['total'] == 0) {
+            if (!$datoDescargadaActiva->getesDescargada()) {
                 $estadisticas['noDescargados']++;
                 $estado = DatosHoteles::NO_DESCARGADA;
             } else {

@@ -37,7 +37,7 @@
   .custom-button {
     background-color: #2981bb;
     border: none;
-    color: white;
+    color: white !important;
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
