@@ -30,7 +30,7 @@ class EstablecimientoMayorista
      */
     public static function fromArray(array $datos): EstablecimientoMayorista
     {
-        $codigo = $datos[0];
+        $codigo = $datos[0] . "";
         $nombre = $datos[1];
         return new EstablecimientoMayorista($codigo, $nombre);
     }

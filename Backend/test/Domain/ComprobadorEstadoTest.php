@@ -87,7 +87,7 @@ class ComprobadorEstadoTest extends TestCase
             ->getMock();
 
         $comprobarEstado = array(
-            "total" => 1, // mapeoado
+            "total" => 1, // mapeado
             "usuario" => 'tema'
         );
         $equivalenciasDao->method('comprobarEstado')
@@ -157,7 +157,7 @@ class ComprobadorEstadoTest extends TestCase
             ->getMock();
 
         $comprobarEstado = array(
-            "total" => 1, // mapeoado
+            "total" => 1, // mapeado
             "usuario" => 'tema'
         );
         $equivalenciasDao->method('comprobarEstado')
@@ -227,7 +227,7 @@ class ComprobadorEstadoTest extends TestCase
             ->getMock();
 
         $comprobarEstado = array(
-            "total" => 0, // mapeoado
+            "total" => 0, // mapeado
             "usuario" => 'asdasd'
         );
         $equivalenciasDao->method('comprobarEstado')
@@ -296,7 +296,7 @@ class ComprobadorEstadoTest extends TestCase
             ->getMock();
 
         $comprobarEstado = array(
-            "total" => 0, // mapeoado
+            "total" => 0, // mapeado
             "usuario" => 'asdasd'
         );
         $equivalenciasDao->method('comprobarEstado')
@@ -365,7 +365,7 @@ class ComprobadorEstadoTest extends TestCase
             ->getMock();
 
         $comprobarEstado = array(
-            "total" => 0, // mapeoado
+            "total" => 0, // mapeado
             "usuario" => 'asdasd'
         );
         $equivalenciasDao->method('comprobarEstado')
@@ -436,7 +436,7 @@ class ComprobadorEstadoTest extends TestCase
             ->getMock();
 
         $comprobarEstado = array(
-            "total" => 1, // mapeoado
+            "total" => 1, // mapeado
             "usuario" => DatosHoteles::USUARIO_MAPEADO_BLOCK,
         );
         $equivalenciasDao->method('comprobarEstado')
@@ -506,7 +506,7 @@ class ComprobadorEstadoTest extends TestCase
             ->getMock();
 
         $comprobarEstado = array(
-            "total" => 1, // mapeoado
+            "total" => 1, // mapeado
             "usuario" => DatosHoteles::USUARIO_MAPEADO_BLOCK,
         );
         $equivalenciasDao->method('comprobarEstado')
@@ -576,19 +576,23 @@ class ComprobadorEstadoTest extends TestCase
             ->getMock();
 
         $comprobarEstado = array(
-            "total" => 1, // mapeoado
+            "total" => 1, // mapeado
             "usuario" => DatosHoteles::USUARIO_MAPEADO_BLOCK,
         );
         $equivalenciasDao->method('comprobarEstado')
             ->willReturn($comprobarEstado);
 
 
-        $resultadoComprobarEquivalencia = [
+        $resultadoComprobarEquivalencia1 = [
             'total' => 1, // descargado
             'activo' => 1
         ];
+        $resultadoComprobarEquivalencia2 = [
+            'total' => 1, // descargado
+            'activo' => 0
+        ];
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturn($resultadoComprobarEquivalencia);
+            ->willReturnOnConsecutiveCalls($resultadoComprobarEquivalencia1, $resultadoComprobarEquivalencia2);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -603,13 +607,13 @@ class ComprobadorEstadoTest extends TestCase
             'mapeados' => 0,
             'mapeadosBlock' => 2,
             'noDescargados' => 0,
-            'activaTotal' => 2,
+            'activaTotal' => 1,
             'activaPendiente' => 0,
             'activaMapeado' => 0,
-            'activaBlock' => 2,
-            'noActivaTotal' => 0,
+            'activaBlock' => 1,
+            'noActivaTotal' => 1,
             'noActivaMapeado' => 0,
-            'noActivaBlock' => 0,
+            'noActivaBlock' => 1,
             'noActivaPendiente' => 0
         ];
         $esperado = [
@@ -626,7 +630,354 @@ class ComprobadorEstadoTest extends TestCase
             "Codigo" => '2',
             "Nombre" => 'Nauzet2',
             "Estado" => DatosHoteles::ESTADO_BLOCK,
+            "Activa" => false,
+        ];
+        $resultado = $instancia->getEstados();
+        $this->assertEquals($esperado, $resultado);
+    }
+    /**
+     * @test
+     * @return void
+     */
+    public function estadistica_con_mapeado(): void
+    {
+        // Dependencias
+        $datosEntrada = [
+            new EstablecimientoMayorista('1', 'Nauzet'),
+            new EstablecimientoMayorista('2', 'Nauzet2')
+        ];
+        /** @var EquivalenciasDAO|\PHPUnit\Framework\MockObject\MockObject $equivalenciasDao */
+        $equivalenciasDao = $this->getMockBuilder(EquivalenciasDAO::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        /** @var ActivaDao|\PHPUnit\Framework\MockObject\MockObject $descargadoActivoDao */
+        $descargadoActivoDao = $this->getMockBuilder(ActivaDao::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $comprobarEstado = array(
+            "total" => 1, // mapeado
+            "usuario" => "Usuario",
+        );
+        $equivalenciasDao->method('comprobarEstado')
+            ->willReturn($comprobarEstado);
+
+
+        $resultadoComprobarEquivalencia1 = [
+            'total' => 1, // descargado
+            'activo' => 1
+        ];
+        $resultadoComprobarEquivalencia2 = [
+            'total' => 1, // descargado
+            'activo' => 0
+        ];
+        $descargadoActivoDao->method('comprobarDescargadaActiva')
+            ->willReturnOnConsecutiveCalls($resultadoComprobarEquivalencia1, $resultadoComprobarEquivalencia2);
+
+        $instancia = new ComprobadorEstado(
+            $datosEntrada,
+            $equivalenciasDao,
+            $descargadoActivoDao,
+            2
+        );
+
+        $estadisticas = [
+            'total' => 2,
+            'pendientes' => 0,
+            'mapeados' => 2,
+            'mapeadosBlock' => 0,
+            'noDescargados' => 0,
+            'activaTotal' => 1,
+            'activaPendiente' => 0,
+            'activaMapeado' => 1,
+            'activaBlock' => 0,
+            'noActivaTotal' => 1,
+            'noActivaMapeado' => 1,
+            'noActivaBlock' => 0,
+            'noActivaPendiente' => 0
+        ];
+        $esperado = [
+            'estadisticas' => $estadisticas,
+            'datos' => []
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '1',
+            "Nombre" => 'Nauzet',
+            "Estado" => DatosHoteles::ESTADO_MAPEADO,
             "Activa" => true,
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '2',
+            "Nombre" => 'Nauzet2',
+            "Estado" => DatosHoteles::ESTADO_MAPEADO,
+            "Activa" => false,
+        ];
+        $resultado = $instancia->getEstados();
+        $this->assertEquals($esperado, $resultado);
+    }
+    /**
+     * @test
+     * @return void
+     */
+    public function estadistica_con_pendiente(): void
+    {
+        // Dependencias
+        $datosEntrada = [
+            new EstablecimientoMayorista('1', 'Nauzet'),
+            new EstablecimientoMayorista('2', 'Nauzet2')
+        ];
+        /** @var EquivalenciasDAO|\PHPUnit\Framework\MockObject\MockObject $equivalenciasDao */
+        $equivalenciasDao = $this->getMockBuilder(EquivalenciasDAO::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        /** @var ActivaDao|\PHPUnit\Framework\MockObject\MockObject $descargadoActivoDao */
+        $descargadoActivoDao = $this->getMockBuilder(ActivaDao::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $comprobarEstado = array(
+            "total" => 0, // mapeado
+            "usuario" => "Usuario",
+        );
+        $equivalenciasDao->method('comprobarEstado')
+            ->willReturn($comprobarEstado);
+
+
+        $resultadoComprobarEquivalencia1 = [
+            'total' => 1, // descargado
+            'activo' => 1
+        ];
+        $resultadoComprobarEquivalencia2 = [
+            'total' => 1, // descargado
+            'activo' => 0
+        ];
+        $descargadoActivoDao->method('comprobarDescargadaActiva')
+            ->willReturnOnConsecutiveCalls($resultadoComprobarEquivalencia1, $resultadoComprobarEquivalencia2);
+
+        $instancia = new ComprobadorEstado(
+            $datosEntrada,
+            $equivalenciasDao,
+            $descargadoActivoDao,
+            2
+        );
+
+        $estadisticas = [
+            'total' => 2,
+            'pendientes' => 2,
+            'mapeados' => 0,
+            'mapeadosBlock' => 0,
+            'noDescargados' => 0,
+            'activaTotal' => 1,
+            'activaPendiente' => 1,
+            'activaMapeado' => 0,
+            'activaBlock' => 0,
+            'noActivaTotal' => 1,
+            'noActivaMapeado' => 0,
+            'noActivaBlock' => 0,
+            'noActivaPendiente' => 1
+        ];
+        $esperado = [
+            'estadisticas' => $estadisticas,
+            'datos' => []
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '1',
+            "Nombre" => 'Nauzet',
+            "Estado" => DatosHoteles::ESTADO_PENDIENTE,
+            "Activa" => true,
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '2',
+            "Nombre" => 'Nauzet2',
+            "Estado" => DatosHoteles::ESTADO_PENDIENTE,
+            "Activa" => false,
+        ];
+        $resultado = $instancia->getEstados();
+        $this->assertEquals($esperado, $resultado);
+    }
+    /**
+     * @test
+     * @return void
+     */
+    public function estadistica_con_todo(): void
+    {
+        /*
+        1º Pendiente Activo
+        2º Pendiente No Activo
+        3º Mapeado Activo
+        4º Mapeado No activo
+        5º Block Activo
+        6º Block No Activo
+        7º No descargado
+        */
+
+        // Dependencias
+        $datosEntrada = [
+            new EstablecimientoMayorista('1', 'Nauzet'),
+            new EstablecimientoMayorista('2', 'Nauzet2'),
+            new EstablecimientoMayorista('3', 'Nauzet3'),
+            new EstablecimientoMayorista('4', 'Nauzet4'),
+            new EstablecimientoMayorista('5', 'Nauzet5'),
+            new EstablecimientoMayorista('6', 'Nauzet6'),
+            new EstablecimientoMayorista('7', 'Nauzet7'),
+        ];
+        /** @var EquivalenciasDAO|\PHPUnit\Framework\MockObject\MockObject $equivalenciasDao */
+        $equivalenciasDao = $this->getMockBuilder(EquivalenciasDAO::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        /** @var ActivaDao|\PHPUnit\Framework\MockObject\MockObject $descargadoActivoDao */
+        $descargadoActivoDao = $this->getMockBuilder(ActivaDao::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $comprobarEstado1 = array(
+            "total" => 0, // mapeado
+            "usuario" => "Usuario",
+        );
+        $comprobarEstado2 = array(
+            "total" => 0, // mapeado
+            "usuario" => "Usuario",
+        );
+        $comprobarEstado3 = array(
+            "total" => 1, // mapeado
+            "usuario" => "Usuario",
+        );
+        $comprobarEstado4 = array(
+            "total" => 1, // mapeado
+            "usuario" => "Usuario",
+        );
+        $comprobarEstado5 = array(
+            "total" => 1, // mapeado
+            "usuario" => DatosHoteles::USUARIO_MAPEADO_BLOCK,
+        );
+        $comprobarEstado6 = array(
+            "total" => 1, // mapeado
+            "usuario" => DatosHoteles::USUARIO_MAPEADO_BLOCK,
+        );
+        $comprobarEstado7 = array(
+            "total" => 0, // mapeado
+            "usuario" => "Usuario",
+        );
+
+
+        $equivalenciasDao->method('comprobarEstado')
+            ->willReturnOnConsecutiveCalls(
+                $comprobarEstado1,
+                $comprobarEstado2,
+                $comprobarEstado3,
+                $comprobarEstado4,
+                $comprobarEstado5,
+                $comprobarEstado6,
+                $comprobarEstado7,
+            );
+
+
+        $resultadoComprobarEquivalencia1 = [
+            'total' => 1, // descargado
+            'activo' => 1
+        ];
+        $resultadoComprobarEquivalencia2 = [
+            'total' => 1, // descargado
+            'activo' => 0
+        ];
+        $resultadoComprobarEquivalencia3 = [
+            'total' => 1, // descargado
+            'activo' => 1
+        ];
+        $resultadoComprobarEquivalencia4 = [
+            'total' => 1, // descargado
+            'activo' => 0
+        ];
+        $resultadoComprobarEquivalencia5 = [
+            'total' => 1, // descargado
+            'activo' => 1
+        ];
+        $resultadoComprobarEquivalencia6 = [
+            'total' => 1, // descargado
+            'activo' => 0
+        ];
+        $resultadoComprobarEquivalencia7 = [
+            'total' => 0, // descargado
+            'activo' => 0
+        ];
+        $descargadoActivoDao->method('comprobarDescargadaActiva')
+            ->willReturnOnConsecutiveCalls(
+                $resultadoComprobarEquivalencia1,
+                $resultadoComprobarEquivalencia2,
+                $resultadoComprobarEquivalencia3,
+                $resultadoComprobarEquivalencia4,
+                $resultadoComprobarEquivalencia5,
+                $resultadoComprobarEquivalencia6,
+                $resultadoComprobarEquivalencia7,
+            );
+
+        $instancia = new ComprobadorEstado(
+            $datosEntrada,
+            $equivalenciasDao,
+            $descargadoActivoDao,
+            7
+        );
+
+        $estadisticas = [
+            'total' => 7,
+            'pendientes' => 2,
+            'mapeados' => 2,
+            'mapeadosBlock' => 2,
+            'noDescargados' => 1,
+            'activaTotal' => 3,
+            'activaPendiente' => 1,
+            'activaMapeado' => 1,
+            'activaBlock' => 1,
+            'noActivaTotal' => 3,
+            'noActivaMapeado' => 1,
+            'noActivaBlock' => 1,
+            'noActivaPendiente' => 1
+        ];
+        $esperado = [
+            'estadisticas' => $estadisticas,
+            'datos' => []
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '1',
+            "Nombre" => 'Nauzet',
+            "Estado" => DatosHoteles::ESTADO_PENDIENTE,
+            "Activa" => true,
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '2',
+            "Nombre" => 'Nauzet2',
+            "Estado" => DatosHoteles::ESTADO_PENDIENTE,
+            "Activa" => false,
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '3',
+            "Nombre" => 'Nauzet3',
+            "Estado" => DatosHoteles::ESTADO_MAPEADO,
+            "Activa" => true,
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '4',
+            "Nombre" => 'Nauzet4',
+            "Estado" => DatosHoteles::ESTADO_MAPEADO,
+            "Activa" => false,
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '5',
+            "Nombre" => 'Nauzet5',
+            "Estado" => DatosHoteles::ESTADO_BLOCK,
+            "Activa" => true,
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '6',
+            "Nombre" => 'Nauzet6',
+            "Estado" => DatosHoteles::ESTADO_BLOCK,
+            "Activa" => false,
+        ];
+        $esperado['datos'][] = [
+            "Codigo" => '7',
+            "Nombre" => 'Nauzet7',
+            "Estado" => DatosHoteles::NO_DESCARGADA,
+            "Activa" => false,
         ];
         $resultado = $instancia->getEstados();
         $this->assertEquals($esperado, $resultado);

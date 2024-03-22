@@ -101,23 +101,28 @@ class Controlador
         );
 
         $parametrosBBDD = $BBDDSelector();
-
+        unset($BBDDSelector);
+        unset($selector);
         $dbName = $parametrosBBDD["conexion"];
 
         $NombreTabla1 = $parametrosBBDD["tabla1"];
 
         $NombreTabla2 = $parametrosBBDD["tabla2"];
-
+        unset($parametrosBBDD);
         $partes = explode('.', $this->parametros["NombreFile"]);
         $extension = $partes[1];
+        unset($partes);
 
         $nombreArchivoDescargar = $this->parametros['token'] . ".ods";
         $gestorArchivo = new GestorArchivosOds($this->rutaFiles, $nombreArchivoDescargar);
         if (!file_exists($this->rutaFiles . $nombreArchivoDescargar)) {
             $equivalenciasDao = new EquivalenciasDAOMysql($database, $NombreTabla1, $dbName);
             $comprobarActiva = new ActivaDaoMysql($database, $NombreTabla2, $dbName);
+            unset($database);
+            unset($dbName);
+            unset($NombreTabla1);
+            unset($NombreTabla2);
             $rutaArchivoCompleto = $this->rutaFiles . $this->parametros["NombreFile"];
-            $gestorEstablecimientos = null;
             if ($extension == "csv") {
                 $gestorEstablecimientos = new GestorEstablecimientosCSV($rutaArchivoCompleto);
             } elseif ($extension == "ods") {
@@ -127,6 +132,7 @@ class Controlador
             } else {
                 throw new \Exception('Tipo de archivo no valido');
             }
+            unset($extension);
             while (!file_exists($rutaArchivoCompleto)) {
                 sleep(1);
             }
@@ -138,8 +144,13 @@ class Controlador
             );
             $datos = $obtenerEquivalencias();
             unset($obtenerEquivalencias);
+            unset($gestorEstablecimientos);
+            unset($rutaArchivoCompleto);
+            unset($comprobarActiva);
+            unset($equivalenciasDao);
 
             $gestorArchivo->crearArchivo($datos);
+            unset($datos);
         }
         $gestorArchivo->descargarArchivo($this->rutaFiles, $nombreArchivoDescargar);
     }
