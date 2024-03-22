@@ -1,4 +1,5 @@
 <?php
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
 use PDO;
@@ -17,7 +18,6 @@ class Database
     public PDO $connection;
 
     /**
-     * __construct
      *
      * @param  string $host
      * @param  string $user
@@ -39,11 +39,9 @@ class Database
         $this->dbName = $dbName;
         $this->dbPort = $dbPort;
         $this->connection = $this->getConnection();
-
     }
 
     /**
-     * getConnection
      *
      * @throws \Exception
      * @return PDO
@@ -53,8 +51,8 @@ class Database
         try {
             $pdo = new PDO(
                 "mysql:host=" . $this->host .
-                "; port=" . $this->dbPort .
-                ";dbname=" . $this->dbName,
+                    "; port=" . $this->dbPort .
+                    ";dbname=" . $this->dbName,
                 $this->user,
                 $this->pass
             );

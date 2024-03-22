@@ -1,4 +1,5 @@
 <?php
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
 use ComprobadorEquivalencias\Domain\EquivalenciasDAO;
@@ -11,7 +12,6 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
     private string $db;
 
     /**
-     * __construct
      *
      * @param  Database $db
      * @param  string $tabla
@@ -25,7 +25,6 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
     }
 
     /**
-     * getAll
      *
      * @return array
      */
@@ -41,17 +40,16 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
         return $datos;
     }
     /**
-     * comprobarEstado
      *
      * @param  string $codigo
      * @return array
      */
     public function comprobarEstado(string $codigo): array
     {
-        $sql = "SELECT COUNT(*) as total,codigo,usuario "
+        $sql = "SELECT COUNT(*) as total,usuario "
             . " FROM " . $this->db . "." . $this->tabla . " "
             . " WHERE codigo = :codigo "
-            . " GROUP BY codigo, usuario";
+            . " GROUP BY usuario";
         $prepare = $this->pdo->prepare($sql);
         $prepare->bindParam(':codigo', $codigo);
         $prepare->execute();
@@ -63,7 +61,4 @@ class EquivalenciasDAOMysql implements EquivalenciasDAO
         }
         return $datos;
     }
-    
-
-
 }

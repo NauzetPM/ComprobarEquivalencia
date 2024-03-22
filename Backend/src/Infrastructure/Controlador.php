@@ -1,4 +1,5 @@
 <?php
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
 use ComprobadorEquivalencias\Application\ObtenerEstadoEquivalencias;
@@ -15,7 +16,6 @@ class Controlador
     private string $rutaTemporales = __DIR__ . "/../../temporales/";
 
     /**
-     * __construct
      *
      * @param  array $parametros
      */
@@ -37,33 +37,30 @@ class Controlador
 
 
     /**
-     * comprobarToken
      * @throws \Exception
      * @return bool
      */
     public function comprobarToken(): bool
     {
-        if (!isset ($this->parametros['token'])) {
+        if (!isset($this->parametros['token'])) {
             throw new \Exception('No se ha recibido token');
         }
         $token = $this->parametros['token'];
         $return = $this->cacheManager->esTokenValido($token);
         return $return;
-        
     }
 
     /**
-     * comprobarFichero
      * @throws \Exception
      * @return array
      */
     public function subirFichero(): array
     {
-        if(!isset($this->parametros["totalChunks"]) || !isset($this->parametros["chunkIndex"])){
+        if (!isset($this->parametros["totalChunks"]) || !isset($this->parametros["chunkIndex"])) {
             throw new \Exception('No se ha recibido totalChunks o chunkIndex');
         }
-        if($this->parametros["totalChunks"]==$this->parametros["chunkIndex"]+1){
-            if (!isset ($this->parametros['token'])) {
+        if ($this->parametros["totalChunks"] == $this->parametros["chunkIndex"] + 1) {
+            if (!isset($this->parametros['token'])) {
                 throw new \Exception('No se ha recibido token');
             }
             $this->cacheManager->guardarToken($this->parametros['token'], $this->parametros['token']);
@@ -76,24 +73,22 @@ class Controlador
             "status" => "OK",
             "code" => "Se subio correctamente el fragmento"
         ]);
-
     }
-    
+
     /**
-     * descargar
      *
      * @throws \Exception
      * @return void
      */
     public function descargar(): void
-    {   
-        if (!isset ($this->parametros['token'])) {
+    {
+        if (!isset($this->parametros['token'])) {
             throw new \Exception('No se ha recibido token');
         }
-        if (!isset ($this->parametros["NombreMayorista"])) {
+        if (!isset($this->parametros["NombreMayorista"])) {
             throw new \Exception('No se ha recibido Nombre Mayorista');
         }
-        if (!isset ($this->parametros["NombreFile"])) {
+        if (!isset($this->parametros["NombreFile"])) {
             throw new \Exception('No se ha recibido NombreFile');
         }
         $database = new Database($_ENV['BBDD_HOST'], $_ENV['BBDD_USER'], $_ENV['BBDD_PASS'], $_ENV['BBDD_DATABASE_CONFIG'], $_ENV['BBDD_PORT']);
@@ -135,13 +130,11 @@ class Controlador
             while (!file_exists($rutaArchivoCompleto)) {
                 sleep(1);
             }
-            $filtros = $this->parametros;
             $obtenerEquivalencias = new ObtenerEstadoEquivalencias(
 
                 $gestorEstablecimientos,
                 $equivalenciasDao,
-                $comprobarActiva,
-                $filtros
+                $comprobarActiva
             );
             $datos = $obtenerEquivalencias();
             unset($obtenerEquivalencias);

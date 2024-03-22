@@ -1,4 +1,5 @@
 <?php
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
 use ComprobadorEquivalencias\Domain\ActivaDao;
@@ -11,9 +12,8 @@ class  ActivaDaoMysql  implements ActivaDao
 
     private $db;
 
- 
+
     /**
-     * __construct
      *
      * @param  Database $db
      * @param  string $tabla
@@ -27,7 +27,6 @@ class  ActivaDaoMysql  implements ActivaDao
     }
 
     /**
-     * getAll
      *
      * @return array
      */
@@ -43,12 +42,11 @@ class  ActivaDaoMysql  implements ActivaDao
         return $datos;
     }
     /**
-     * comprobarEstado
      *
      * @param  string $codigo
      * @return array
      */
-    public function comprobarActiva(string $codigo): array
+    public function comprobarDescargadaActiva(string $codigo): array
     {
         $sql = "SELECT COUNT(*) as total,codigo,activo "
             . " FROM " . $this->db . "." . $this->tabla . " "
@@ -65,6 +63,4 @@ class  ActivaDaoMysql  implements ActivaDao
         }
         return $datos;
     }
-
-
 }

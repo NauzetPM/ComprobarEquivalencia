@@ -13,33 +13,30 @@ class ObtenerEstadoEquivalencias
     private EquivalenciasDAO $equivalenciasDao;
 
     private ActivaDao $activaDao;
-    private array $filtros;
 
-    
+
+
 
     /**
-     * __construct
      *
-     * @param  GestorEstablecimientos $gestorEstablecimientos
-     * @param  EquivalenciasDAO $equivalenciasDAO
-     * @param  ActivaDao $activaDao
-     * @param  array $filtros
-     */    
+     * @param GestorEstablecimientos gestorEstablecimientos
+     * @param EquivalenciasDAO equivalenciasDAO
+     * @param ActivaDao activaDao
+     *
+     */
     public function __construct(
-    GestorEstablecimientos $gestorEstablecimientos,
-    EquivalenciasDAO $equivalenciasDAO,
-    ActivaDao $activaDao,
-    array $filtros,
+        GestorEstablecimientos $gestorEstablecimientos,
+        EquivalenciasDAO $equivalenciasDAO,
+        ActivaDao $activaDao
     ) {
         $this->gestorEstablecimientos = $gestorEstablecimientos;
         $this->equivalenciasDao = $equivalenciasDAO;
-        $this->filtros = $filtros;
         $this->activaDao = $activaDao;
     }
 
 
+
     /**
-     *
      * @return array
      */
     public function __invoke(): array
@@ -47,11 +44,11 @@ class ObtenerEstadoEquivalencias
 
         $respuesta = "";
         $datos = $this->gestorEstablecimientos->getDatos();
-        $Comprobador = new ComprobadorEstado
-        (
+        $Comprobador = new ComprobadorEstado(
             $datos["datos"],
             $this->equivalenciasDao,
-            $this->activaDao
+            $this->activaDao,
+            $datos['total'],
         );
         $respuesta = $Comprobador->getEstados();
         return $respuesta;

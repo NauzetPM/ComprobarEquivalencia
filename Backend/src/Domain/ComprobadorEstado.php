@@ -1,6 +1,6 @@
 <?php
+
 namespace ComprobadorEquivalencias\Domain;
-use Seld\JsonLint\Undefined;
 
 class ComprobadorEstado
 {
@@ -8,33 +8,35 @@ class ComprobadorEstado
     private array $datosArchivo;
 
     private ActivaDao $activaDao;
+    private int $total;
 
     /**
-     * __construct
      *
-     * @param  array  $datosArchivo
-     * @param  EquivalenciasDAO $estadoDAO
-     * @param  ActivaDao $activa
+     * @param EstablecimientoMayorista[] $datosArchivo
+     * @param EquivalenciasDAO $estadoDAO
+     * @param ActivaDao $activa
+     * @param int $total
      */
     public function __construct(
         array $datosArchivo,
         EquivalenciasDAO $estadoDAO,
-        ActivaDao $activa
+        ActivaDao $activa,
+        int $total
     ) {
         $this->equivalenciaDAO = $estadoDAO;
         $this->datosArchivo = $datosArchivo;
         $this->activaDao = $activa;
+        $this->total = $total;
     }
+
     /**
-     * getEstados
      *
      * @return array
      */
     public function getEstados(): array
-    {   
-        $datos=array();
+    {
+        $datos = array();
         $estadisticas = [
-            'total' => 0,
             'pendientes' => 0,
             'mapeados' => 0,
             'mapeadosBlock' => 0,
@@ -48,89 +50,58 @@ class ComprobadorEstado
             'noActivaBlock' => 0,
             'noActivaPendiente' => 0
         ];
-    
-        $total = count($this->datosArchivo);
-    
-        for ($c = 0; $c < $total; $c++) {
-            $datoActiva = $this->activaDao->comprobarActiva($this->datosArchivo[$c][0]);
-            $codigo = $this->datosArchivo[$c][0];
-            $nombre = $this->datosArchivo[$c][1];
+
+        foreach ($this->datosArchivo as $nEstablecimientoComprobar) {
+
+            $codigo = $nEstablecimientoComprobar->getCodigo();
+            $nombre = $nEstablecimientoComprobar->getNombre();
+
+            $datoDescargadaActiva = $this->activaDao->comprobarDescargadaActiva($codigo);
             $estado = "";
-            $estaDescargado = $datoActiva['total'] > 0;
-            $estaActivo = $datoActiva['activo'] == 1;
-    
-            if ($datoActiva['total'] == 0) {
+
+            $estaActivo = $datoDescargadaActiva['activo'] == 1;
+
+            if ($datoDescargadaActiva['total'] == 0) {
                 $estadisticas['noDescargados']++;
                 $estado = DatosHoteles::NO_DESCARGADA;
-                $datosHotel = new DatosHoteles($codigo, $nombre, $estado, DatosHoteles::NO_ACTIVA);
             } else {
+
+                // DESCARCAGOS
                 $datoEstado = $this->equivalenciaDAO->comprobarEstado($codigo);
                 $totalMapeos = $datoEstado['total'];
                 $usuarioMapeo = "";
-    
+
                 if ($totalMapeos > 0) {
-                    if ($datoEstado["codigo"] == $codigo) {
-                        $usuarioMapeo = $datoEstado["usuario"];
-                    }
+                    $usuarioMapeo = $datoEstado["usuario"];
                 }
-    
+
+                if ($estaActivo) {
+                    $estadisticas['activaTotal']++;
+                } else {
+                    $estadisticas['noActivaTotal']++;
+                }
                 $estadoEstablecimiento = new EstadoEstablecimiento($totalMapeos, $estaActivo, $usuarioMapeo);
                 $estadoActivo = $estadoEstablecimiento->obtenerEstado();
-    
-                if ($estadoActivo == DatosHoteles::ESTADO_MAPEADO_NO_ACTIVO) {
-                    $estadisticas['mapeados']++;
-                    $estadisticas['noActivaMapeado']++;
-                    $estadisticas['noActivaTotal']++;
-                    $estado = DatosHoteles::ESTADO_MAPEADO;
-                    $activa = DatosHoteles::ACTIVA;
+
+                if (!isset($estadisticas[$estadoActivo])) {
+                    throw new \InvalidArgumentException("Estado no registrado");
                 }
-                if($estadoActivo==DatosHoteles::ESTADO_MAPEADO_ACTIVO){
-                    $estadisticas['mapeados']++;
-                    $estadisticas['activaMapeado']++;
-                    $estadisticas['activaTotal']++;
-                    $estado=DatosHoteles::ESTADO_MAPEADO;
-                    $activa=DatosHoteles::NO_ACTIVA;
-                }
-                if($estadoActivo== DatosHoteles::ESTADO_MAPEADO_BLOCK_ACTIVO){
-                    $estadisticas['mapeadosBlock']++;
-                    $estadisticas['activaBlock']++;
-                    $estadisticas['activaTotal']++;
-                    $estado=DatosHoteles::ESTADO_BLOCK;
-                    $activa=DatosHoteles::ACTIVA;
-                }
-                if($estadoActivo== DatosHoteles::ESTADO_MAPEADO_BLOCK_NO_ACTIVO){
-                    $estadisticas['mapeadosBlock']++;
-                    $estadisticas['noActivaBlock']++;
-                    $estadisticas['noActivaTotal']++;
-                    $estado=DatosHoteles::ESTADO_BLOCK;
-                    $activa=DatosHoteles::NO_ACTIVA;
-                }
-                if($estadoActivo==DatosHoteles::ESTADO_PENDIENTE_ACTIVO){
-                    $estadisticas['pendientes']++;
-                    $estadisticas['activaPendiente']++;
-                    $estadisticas['activaTotal']++;
-                    $estado=DatosHoteles::ESTADO_PENDIENTE;
-                    $activa=DatosHoteles::ACTIVA;
-                }
-                if($estadoActivo==DatosHoteles::ESTADO_PENDIENTE_NO_ACTIVO){
-                    $estadisticas['pendientes']++;
-                    $estadisticas['noActivaPendiente']++;
-                    $estadisticas['noActivaTotal']++;
-                    $estado=DatosHoteles::ESTADO_PENDIENTE;
-                    $activa=DatosHoteles::NO_ACTIVA;
-                }
-    
-                $datosHotel = new DatosHoteles($codigo, $nombre, $estado, $activa);
+                $estadisticas[$estadoActivo]++;
+                $estado = $estadoEstablecimiento->obtenerTipoEquivalencia();
             }
-    
+            $datosHotel = new DatosHoteles($codigo, $nombre, $estado, $estaActivo);
+
             $datos[] = $datosHotel->asArray();
         }
-    
-        $estadisticas['total'] = $total;
+        $estadisticas['total'] = $this->total;
+        $estadisticas['pendientes'] = $estadisticas['activaPendiente'] + $estadisticas['noActivaPendiente'];
+        $estadisticas['mapeados'] = $estadisticas['activaMapeado'] + $estadisticas['noActivaMapeado'];
+        $estadisticas['mapeadosBlock'] = $estadisticas['activaBlock'] + $estadisticas['noActivaBlock'];
+
+
         return [
             'estadisticas' => $estadisticas,
             'datos' => $datos
         ];
     }
-
 }

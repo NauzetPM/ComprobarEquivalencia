@@ -1,4 +1,5 @@
 <?php
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
 use ComprobadorEquivalencias\Domain\GestorSelector;
@@ -9,7 +10,6 @@ class GestorSelectorMysql implements GestorSelector
     private PDO $pdo;
 
     /**
-     * __construct
      *
      * @param  Database $db
      */
@@ -18,7 +18,6 @@ class GestorSelectorMysql implements GestorSelector
         $this->pdo = $db->connection;
     }
     /**
-     * obtenerCorrespondencias
      *
      * @param  string $nombre
      * @return array
@@ -32,7 +31,9 @@ class GestorSelectorMysql implements GestorSelector
         $stmt->bindParam(':mayorista', $nombre);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result === false) {
+            $result = [];
+        }
         return $result;
     }
-
 }

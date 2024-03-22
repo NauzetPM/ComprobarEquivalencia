@@ -1,15 +1,16 @@
 <?php
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
 use ComprobadorEquivalencias\Domain\GestorEstablecimientos;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use ComprobadorEquivalencias\Domain\EstablecimientoMayorista;
 
 class GestorEstablecimientosODS implements GestorEstablecimientos
 {
     private string $odsFilePath;
 
     /**
-     * __construct
      *
      * @param  string $odsFilePath
      */
@@ -19,7 +20,6 @@ class GestorEstablecimientosODS implements GestorEstablecimientos
     }
 
     /**
-     * getDatos
      *
      * @return array
      */
@@ -39,7 +39,7 @@ class GestorEstablecimientosODS implements GestorEstablecimientos
                 $datosFila[] = $cell->getValue();
             }
 
-            $datosODS[] = $datosFila;
+            $datosODS[] = EstablecimientoMayorista::fromArray($datosFila);
             $total++;
         }
 

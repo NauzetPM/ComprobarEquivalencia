@@ -1,11 +1,11 @@
 <?php
+
 namespace ComprobadorEquivalencias\Domain;
 
 abstract class GestorFicheroBase
 {
 
     /**
-     * crearArchivo
      *
      * @param  array $datos
      * @return void
@@ -14,18 +14,17 @@ abstract class GestorFicheroBase
 
 
     /**
-     * descargarArchivo
      *
      * @throws \Exception
      * @param  string $fileRut
      * @param  string $nombreArchivo
      * @return void
      */
-    public function descargarArchivo(string $fileRut, string $nombreArchivo)
+    public function descargarArchivo(string $fileRut, string $nombreArchivo): void
     {
         $fileName = $nombreArchivo;
         $filePath = $fileRut . $fileName;
-        if (empty ($fileName) || !file_exists($filePath)) {
+        if (empty($fileName) || !file_exists($filePath)) {
             throw new \Exception('El archivo no existe');
         }
 
@@ -50,7 +49,6 @@ abstract class GestorFicheroBase
         return;
     }
     /**
-     * esCSV
      *
      * @param  string $filePath
      * @return bool
@@ -62,7 +60,6 @@ abstract class GestorFicheroBase
     }
 
     /**
-     * esODS
      *
      * @param  string $filePath
      * @return bool
@@ -74,7 +71,6 @@ abstract class GestorFicheroBase
     }
 
     /**
-     * esXLSX
      *
      * @param  string $filePath
      * @return bool

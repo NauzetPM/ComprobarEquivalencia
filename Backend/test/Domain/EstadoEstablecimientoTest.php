@@ -12,7 +12,7 @@ class EstadoEstablecimientoTest extends TestCase
      * @test
      * @return void
      */
-    public function es_establecimiento_mapeado_activo()
+    public function es_establecimiento_mapeado_activo(): void
     {
 
         $totalMapeos = 1;
@@ -25,17 +25,19 @@ class EstadoEstablecimientoTest extends TestCase
             $usuarioMapeo
         );
 
-        $esperado = DatosHoteles::ESTADO_MAPEADO_ACTIVO;
+        $datoEsperado = DatosHoteles::ESTADO_MAPEADO_ACTIVO;
 
-        $resultado = $instancia->obtenerEstado();
-        $this->assertEquals($esperado, $resultado);
-
+        $dato = $instancia->obtenerEstado();
+        $this->assertEquals($datoEsperado, $dato);
+        $estado = $instancia->obtenerTipoEquivalencia();
+        $estadoEsperado = DatosHoteles::ESTADO_MAPEADO;
+        $this->assertEquals($estadoEsperado, $estado);
     }
     /**
      * @test
      * @return void
      */
-    public function es_establecimiento_mapeado_no_activo()
+    public function es_establecimiento_mapeado_no_activo(): void
     {
         $totalMapeos = 1;
         $estaActivo = false;
@@ -47,17 +49,19 @@ class EstadoEstablecimientoTest extends TestCase
             $usuarioMapeo
         );
 
-        $esperado = DatosHoteles::ESTADO_MAPEADO_NO_ACTIVO;
+        $datoEsperado = DatosHoteles::ESTADO_MAPEADO_NO_ACTIVO;
 
-        $resultado = $instancia->obtenerEstado();
-        $this->assertEquals($esperado, $resultado);
-
+        $dato = $instancia->obtenerEstado();
+        $this->assertEquals($datoEsperado, $dato);
+        $estado = $instancia->obtenerTipoEquivalencia();
+        $estadoEsperado = DatosHoteles::ESTADO_MAPEADO;
+        $this->assertEquals($estadoEsperado, $estado);
     }
     /**
      * @test
      * @return void
      */
-    public function es_establecimiento_pendiente_activo()
+    public function es_establecimiento_pendiente_activo(): void
     {
         $totalMapeos = 0;
         $estaActivo = true;
@@ -69,17 +73,19 @@ class EstadoEstablecimientoTest extends TestCase
             $usuarioMapeo
         );
 
-        $esperado = DatosHoteles::ESTADO_PENDIENTE_ACTIVO;
+        $datoEsperado = DatosHoteles::ESTADO_PENDIENTE_ACTIVO;
 
-        $resultado = $instancia->obtenerEstado();
-        $this->assertEquals($esperado, $resultado);
-
+        $dato = $instancia->obtenerEstado();
+        $this->assertEquals($datoEsperado, $dato);
+        $estado = $instancia->obtenerTipoEquivalencia();
+        $estadoEsperado = DatosHoteles::ESTADO_PENDIENTE;
+        $this->assertEquals($estadoEsperado, $estado);
     }
     /**
      * @test
      * @return void
      */
-    public function es_establecimiento_pendiente_no_activo()
+    public function es_establecimiento_pendiente_no_activo(): void
     {
         $totalMapeos = 0;
         $estaActivo = false;
@@ -91,18 +97,20 @@ class EstadoEstablecimientoTest extends TestCase
             $usuarioMapeo
         );
 
-        $esperado = DatosHoteles::ESTADO_PENDIENTE_NO_ACTIVO;
+        $datoEsperado = DatosHoteles::ESTADO_PENDIENTE_NO_ACTIVO;
 
-        $resultado = $instancia->obtenerEstado();
-        $this->assertEquals($esperado, $resultado);
-
+        $dato = $instancia->obtenerEstado();
+        $this->assertEquals($datoEsperado, $dato);
+        $estado = $instancia->obtenerTipoEquivalencia();
+        $estadoEsperado = DatosHoteles::ESTADO_PENDIENTE;
+        $this->assertEquals($estadoEsperado, $estado);
     }
 
     /**
      * @test
      * @return void
      */
-    public function es_establecimiento_mapeado_block_activo()
+    public function es_establecimiento_mapeado_block_activo(): void
     {
         $totalMapeos = 1;
         $estaActivo = true;
@@ -114,17 +122,19 @@ class EstadoEstablecimientoTest extends TestCase
             $usuarioMapeo
         );
 
-        $esperado = DatosHoteles::ESTADO_MAPEADO_BLOCK_ACTIVO;
+        $datoEsperado = DatosHoteles::ESTADO_MAPEADO_BLOCK_ACTIVO;
 
-        $resultado = $instancia->obtenerEstado();
-        $this->assertEquals($esperado, $resultado);
-
+        $dato = $instancia->obtenerEstado();
+        $this->assertEquals($datoEsperado, $dato);
+        $estado = $instancia->obtenerTipoEquivalencia();
+        $estadoEsperado = DatosHoteles::ESTADO_BLOCK;
+        $this->assertEquals($estadoEsperado, $estado);
     }
-        /**
+    /**
      * @test
      * @return void
      */
-    public function es_establecimiento_mapeado_block_no_activo()
+    public function es_establecimiento_mapeado_block_no_activo(): void
     {
         $totalMapeos = 1;
         $estaActivo = false;
@@ -136,10 +146,12 @@ class EstadoEstablecimientoTest extends TestCase
             $usuarioMapeo
         );
 
-        $esperado = DatosHoteles::ESTADO_MAPEADO_BLOCK_NO_ACTIVO;
+        $datoEsperado = DatosHoteles::ESTADO_MAPEADO_BLOCK_NO_ACTIVO;
 
-        $resultado = $instancia->obtenerEstado();
-        $this->assertEquals($esperado, $resultado);
-
+        $dato = $instancia->obtenerEstado();
+        $this->assertEquals($datoEsperado, $dato);
+        $estado = $instancia->obtenerTipoEquivalencia();
+        $estadoEsperado = DatosHoteles::ESTADO_BLOCK;
+        $this->assertEquals($estadoEsperado, $estado);
     }
 }

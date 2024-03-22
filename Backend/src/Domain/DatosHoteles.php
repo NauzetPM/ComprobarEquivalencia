@@ -1,4 +1,5 @@
 <?php
+
 namespace ComprobadorEquivalencias\Domain;
 
 class DatosHoteles
@@ -7,22 +8,20 @@ class DatosHoteles
     private string $nombre;
     private string $estado;
     private string $activa;
+    const USUARIO_MAPEADO_BLOCK = "casamientoBlock";
     const ESTADO_PENDIENTE = "Pendiente";
     const ESTADO_MAPEADO = "Mapeado";
     const ESTADO_BLOCK = "Mapeado Block";
-    const ACTIVA = "Si";
-    const NO_ACTIVA = "No";
     const NO_DESCARGADA = "No descargada";
 
-    const ESTADO_MAPEADO_NO_ACTIVO= "Mapeado No Activo";
-    const ESTADO_MAPEADO_ACTIVO = "Mapeado Activo";
-    const ESTADO_MAPEADO_BLOCK_NO_ACTIVO="Mapeado Block No Activo";
-    const ESTADO_MAPEADO_BLOCK_ACTIVO="Mapeado Block Activo";
-    
-    const ESTADO_PENDIENTE_NO_ACTIVO="Pendiente No Activo";
-    const ESTADO_PENDIENTE_ACTIVO="Pendiente Activo";
+    const ESTADO_MAPEADO_NO_ACTIVO = "noActivaMapeado";
+    const ESTADO_MAPEADO_ACTIVO = "activaMapeado";
+    const ESTADO_MAPEADO_BLOCK_NO_ACTIVO = "noActivaBlock";
+    const ESTADO_MAPEADO_BLOCK_ACTIVO = "activaBlock";
+
+    const ESTADO_PENDIENTE_NO_ACTIVO = "noActivaPendiente";
+    const ESTADO_PENDIENTE_ACTIVO = "activaPendiente";
     /**
-     * __construct
      *
      * @param  string $codigo
      * @param  string $nombre
@@ -41,7 +40,6 @@ class DatosHoteles
         $this->activa = $activa;
     }
     /**
-     * asArray
      *
      * @return array
      */
@@ -78,6 +76,4 @@ class DatosHoteles
     {
         return $this->estado;
     }
-
-
 }

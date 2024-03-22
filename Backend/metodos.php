@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @return string
  * @throws Exception
@@ -31,9 +32,9 @@ function obtenerServicio(): string
 {
     $request_body = json_decode(file_get_contents('php://input'), true);
 
-    if (isset ($_REQUEST['service'])) {
+    if (isset($_REQUEST['service'])) {
         $servicio = $_REQUEST['service'];
-    } elseif (isset ($request_body['service'])) {
+    } elseif (isset($request_body['service'])) {
         $servicio = $request_body['service'];
     } else {
         $servicio = '';
@@ -50,8 +51,8 @@ function obtenerParametros(): array
 {
     $request_body = json_decode(file_get_contents('php://input'), true);
 
-    if (isset ($_REQUEST['service'])) {
-        if (isset ($request_body)) {
+    if (isset($_REQUEST['service'])) {
+        if (isset($request_body)) {
             $parametros = array_merge($_REQUEST, $request_body);
         } else {
             $parametros = $_REQUEST;
@@ -60,7 +61,7 @@ function obtenerParametros(): array
         $parametros = $request_body;
     }
 
-    if (isset ($_FILES['chunk'])) {
+    if (isset($_FILES['chunk'])) {
         if ($_FILES['chunk']['error'] === UPLOAD_ERR_OK) {
             $directory = '/usr/local/programadores/ComprobarEquivalencia/Backend/temporales/';
             $fileName = $_POST['NombreFile'];
@@ -82,12 +83,10 @@ function obtenerParametros(): array
                 }
 
                 fclose($completeFile);
-
             }
         } else {
             throw new Exception("Error al subir el fragmento: " . $_FILES['chunk']['error']);
         }
-
     }
 
     if (!is_array($parametros)) {
@@ -99,7 +98,6 @@ function obtenerParametros(): array
 }
 
 /**
- * buscarServicioDisponible
  *
  * @param  string $verbo_http
  * @param  string $servicio
@@ -125,14 +123,13 @@ function buscarServicioDisponible(string $verbo_http, string $servicio): array
         ]
     ];
 
-    if (!isset ($router[$verbo_http][$servicio])) {
+    if (!isset($router[$verbo_http][$servicio])) {
         $error = [
             "status" => "KO",
             "error" => "Servicio no disponible:[$verbo_http][$servicio]"
         ];
 
-        die (json_encode($error));
+        die(json_encode($error));
     }
     return $router[$verbo_http][$servicio];
-
 }

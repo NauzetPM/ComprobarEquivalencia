@@ -1,6 +1,8 @@
 <?php
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
+use ComprobadorEquivalencias\Domain\EstablecimientoMayorista;
 use ComprobadorEquivalencias\Domain\GestorEstablecimientos;
 
 class GestorEstablecimientosCSV implements GestorEstablecimientos
@@ -8,7 +10,6 @@ class GestorEstablecimientosCSV implements GestorEstablecimientos
     private string $csvfilePath;
     private int $lenght = 1000;
     /**
-     * __construct
      *
      * @param  string $csvfilePath
      */
@@ -19,7 +20,6 @@ class GestorEstablecimientosCSV implements GestorEstablecimientos
 
 
     /**
-     * getDatos
      *
      * @return array
      */
@@ -30,11 +30,12 @@ class GestorEstablecimientosCSV implements GestorEstablecimientos
         if (($gestor = fopen($this->csvfilePath, "r")) !== FALSE) {
             while (($datos = fgetcsv($gestor, $this->lenght, ",")) !== FALSE) {
                 $datosExpode = explode("|", $datos[0]);
-                $datosCSV[] = $datosExpode;
+                $datosCSV[] = EstablecimientoMayorista::fromArray($datosExpode);
                 $total++;
             }
         }
         fclose($gestor);
+
         return [
             "datos" => $datosCSV,
             "total" => $total,

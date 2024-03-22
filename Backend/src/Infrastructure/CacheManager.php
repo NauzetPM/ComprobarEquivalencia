@@ -7,7 +7,6 @@ class CacheManager
     private string $cacheDir;
 
     /**
-     * __construct
      *
      * @param  string $cacheDir
      */
@@ -20,38 +19,34 @@ class CacheManager
     }
 
     /**
-     * guardarToken
      *
      * @param  string $key
      * @param  string $value
      * @return void
      */
-    public function guardarToken(string $key,string $value): void
+    public function guardarToken(string $key, string $value): void
     {
         $filename = $this->cacheDir . '/' . $key;
         file_put_contents($filename, $value);
     }
 
     /**
-     * esTokenValido
      *
      * @param  string $key
      * @param  int $expiry
      * @return bool
      */
-    public function esTokenValido(string $key, int $expiry = 180): bool
+    public function esTokenValido(string $key, int $expiry = 10): bool
     {
         $filename = $this->cacheDir . '/' . $key;
         if (!file_exists($filename)) {
             return false;
         }
         $filemtime = filemtime($filename);
-        if (time() - $filemtime <= $expiry) {
+        if (time() - $filemtime <= ($expiry * 60)) {
             return true;
         }
         unlink($filename);
-        return false;        
-        
+        return false;
     }
-
 }

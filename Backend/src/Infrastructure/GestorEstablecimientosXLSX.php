@@ -4,6 +4,7 @@ namespace ComprobadorEquivalencias\Infrastructure;
 
 use ComprobadorEquivalencias\Domain\GestorEstablecimientos;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use ComprobadorEquivalencias\Domain\EstablecimientoMayorista;
 
 class GestorEstablecimientosXLSX implements GestorEstablecimientos
 {
@@ -39,7 +40,7 @@ class GestorEstablecimientosXLSX implements GestorEstablecimientos
                 $rowData[] = $cell->getValue();
             }
 
-            $datosXLSX[] = $rowData;
+            $datosXLSX[] = EstablecimientoMayorista::fromArray($rowData);
             $total++;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace ComprobadorEquivalencias\Application;
 
 use ComprobadorEquivalencias\Domain\GestorSelector;
@@ -8,7 +9,6 @@ class ObtenerSeleccion
     private GestorSelector $gestorSelector;
     private string $nombreEmpresa;
     /**
-     * __construct
      *
      * @param  GestorSelector $gestorSelector
      * @param  string $nombreEmpresa
@@ -21,7 +21,6 @@ class ObtenerSeleccion
         $this->nombreEmpresa = $nombreEmpresa;
     }
     /**
-     * __invoke
      *
      * @return array
      */

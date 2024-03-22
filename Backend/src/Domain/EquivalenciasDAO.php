@@ -9,8 +9,12 @@ interface EquivalenciasDAO
      */
     public function getAll(): array;
 
+
+
+
     /**
      * @param string $codigo
+     * 
      * @return array
      */
     public function comprobarEstado(string $codigo): array;

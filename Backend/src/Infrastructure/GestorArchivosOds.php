@@ -1,8 +1,10 @@
 <?php
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
 ini_set('memory_limit', '1024M');
 set_time_limit(300);
+
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Ods;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
@@ -16,9 +18,8 @@ class GestorArchivosOds extends GestorFicheroBase
 
     private string $nombreArchivo;
 
-    
+
     /**
-     * __construct
      *
      * @param  string $filePath
      * @param  string $nombreArchivo
@@ -31,7 +32,6 @@ class GestorArchivosOds extends GestorFicheroBase
     }
 
     /**
-     * crearArchivoOds
      *
      * @param  array $datos
      * @return void
@@ -39,7 +39,7 @@ class GestorArchivosOds extends GestorFicheroBase
     public function crearArchivo(array $datos): void
     {
         $hoja = $this->spreadsheet->getActiveSheet();
-        $estadisticas=$datos['estadisticas'];
+        $estadisticas = $datos['estadisticas'];
         $hoja->getColumnDimension('A')->setWidth(30);
         $hoja->getColumnDimension('B')->setWidth(70);
         $hoja->getColumnDimension('C')->setWidth(20);
@@ -68,26 +68,31 @@ class GestorArchivosOds extends GestorFicheroBase
             $hoja->setCellValue('A' . $fila, $dato['Codigo']);
             $hoja->setCellValue('B' . $fila, $dato['Nombre']);
             $hoja->setCellValue('C' . $fila, $dato['Estado']);
-            $hoja->setCellValue('D' . $fila, $dato['Activa']);
-
-
-            if ($dato["Activa"] == "No descargada") {
-                $color = "FF0000";
+            if ($dato['Activa']) {
+                $activa = "Si";
             } else {
-                switch ($dato['Estado']) {
-                    case 'Pendiente':
-                        $color = "FFC0CB";
-                        break;
-                    case 'Mapeado':
-                        $color = "ADD8E6";
-                        break;
-                    case 'Mapeado Block':
-                        $color = "98FB98";
-                        break;
-                    default:
-                        $color = "FFFFFF";
-                        break;
-                }
+                $activa = "No";
+            }
+            $hoja->setCellValue('D' . $fila, $activa);
+
+
+
+            switch ($dato['Estado']) {
+                case 'Pendiente':
+                    $color = "FFC0CB";
+                    break;
+                case 'Mapeado':
+                    $color = "ADD8E6";
+                    break;
+                case 'Mapeado Block':
+                    $color = "98FB98";
+                    break;
+                case 'No descargada':
+                    $color = "FF0000";
+                    break;
+                default:
+                    $color = "FFFFFF";
+                    break;
             }
             $hoja->getStyle('A' . $fila . ':D' . $fila)->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB($color);
             $fila++;
@@ -127,27 +132,27 @@ class GestorArchivosOds extends GestorFicheroBase
         $mapeadoActiva = $estadisticas["activaMapeado"];
         $mapeadoNoActiva = $estadisticas["noActivaMapeado"];
         $hoja->setCellValue('G2', 'Mapeado');
-        $hoja->setCellValue('H2', $mapeado."(".number_format(($mapeado / $total) * 100, 2) . '%'.")");
-        $hoja->setCellValue('I2', $mapeadoActiva."(".number_format(($mapeadoActiva / $totalActiva) * 100, 2) . '%'.")");
-        $hoja->setCellValue('J2', $mapeadoNoActiva."(".number_format(($mapeadoNoActiva / $totalNoActiva) * 100, 2) . '%'.")");
+        $hoja->setCellValue('H2', $mapeado . "(" . number_format(($mapeado / $total) * 100, 2) . '%' . ")");
+        $hoja->setCellValue('I2', $mapeadoActiva . "(" . number_format(($mapeadoActiva / $totalActiva) * 100, 2) . '%' . ")");
+        $hoja->setCellValue('J2', $mapeadoNoActiva . "(" . number_format(($mapeadoNoActiva / $totalNoActiva) * 100, 2) . '%' . ")");
 
-        
+
         $block = $estadisticas["mapeadosBlock"];
         $blockActiva = $estadisticas["activaBlock"];
         $blockNoActiva = $estadisticas["noActivaBlock"];
         $hoja->setCellValue('G4', 'Mapeado Block');
-        $hoja->setCellValue('H4', $block."(".number_format(($block / $total) * 100, 2) . '%'.")");
-        $hoja->setCellValue('I4', $blockActiva."(".number_format(($blockActiva / $totalActiva) * 100, 2) . '%'.")");
-        $hoja->setCellValue('J4', $blockNoActiva."(".number_format(($blockNoActiva / $totalNoActiva) * 100, 2) . '%'.")");
+        $hoja->setCellValue('H4', $block . "(" . number_format(($block / $total) * 100, 2) . '%' . ")");
+        $hoja->setCellValue('I4', $blockActiva . "(" . number_format(($blockActiva / $totalActiva) * 100, 2) . '%' . ")");
+        $hoja->setCellValue('J4', $blockNoActiva . "(" . number_format(($blockNoActiva / $totalNoActiva) * 100, 2) . '%' . ")");
 
 
         $pendiente = $estadisticas["pendientes"];
         $pendienteActiva = $estadisticas["activaPendiente"];
         $pendienteNoActiva = $estadisticas["noActivaPendiente"];
         $hoja->setCellValue('G6', 'Pendiente');
-        $hoja->setCellValue('H6', $pendiente."(".number_format(($pendiente / $total) * 100, 2) . '%'.")");
-        $hoja->setCellValue('I6', $pendienteActiva."(".number_format(($pendienteActiva / $totalActiva) * 100, 2) . '%'.")");
-        $hoja->setCellValue('J6', $pendienteNoActiva."(".number_format(($pendienteNoActiva / $totalNoActiva) * 100, 2) . '%'.")");
+        $hoja->setCellValue('H6', $pendiente . "(" . number_format(($pendiente / $total) * 100, 2) . '%' . ")");
+        $hoja->setCellValue('I6', $pendienteActiva . "(" . number_format(($pendienteActiva / $totalActiva) * 100, 2) . '%' . ")");
+        $hoja->setCellValue('J6', $pendienteNoActiva . "(" . number_format(($pendienteNoActiva / $totalNoActiva) * 100, 2) . '%' . ")");
 
 
         $writer = new Ods($this->spreadsheet);
@@ -157,5 +162,4 @@ class GestorArchivosOds extends GestorFicheroBase
             throw new \Exception("Error no esperado: ", $e->getMessage());
         }
     }
-
 }

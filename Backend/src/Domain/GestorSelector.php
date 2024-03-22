@@ -1,11 +1,11 @@
 <?php
+
 namespace ComprobadorEquivalencias\Domain;
 
 interface GestorSelector
 {
 
     /**
-     * obtenerCorrespondencias
      *
      * @param  string $nombre
      * @return array
