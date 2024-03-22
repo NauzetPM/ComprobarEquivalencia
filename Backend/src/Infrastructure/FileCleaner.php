@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
 class FileCleaner
@@ -19,7 +21,7 @@ class FileCleaner
      */
     public function cleanOldFiles(string $directory): void
     {
-        $fecha_limite = strtotime('-1 minutes');
+        $fecha_limite = strtotime('-10 minutes');
         $archivos = scandir($directory);
 
         foreach ($archivos as $archivo) {

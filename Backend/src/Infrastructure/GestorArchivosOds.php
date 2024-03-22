@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
 ini_set('memory_limit', '1024M');
@@ -159,7 +161,7 @@ class GestorArchivosOds extends GestorFicheroBase
         try {
             $writer->save($this->filePath . $this->nombreArchivo);
         } catch (\Throwable $e) {
-            throw new \Exception("Error no esperado: ", $e->getMessage());
+            throw new \Exception("Error no esperado: " . $e->getMessage());
         }
     }
 }

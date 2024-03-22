@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ComprobadorEquivalencias\Domain;
 
 class DatosHoteles
@@ -7,7 +9,7 @@ class DatosHoteles
     private string $codigo;
     private string $nombre;
     private string $estado;
-    private string $activa;
+    private bool $activa;
     const USUARIO_MAPEADO_BLOCK = "casamientoBlock";
     const ESTADO_PENDIENTE = "Pendiente";
     const ESTADO_MAPEADO = "Mapeado";
@@ -26,13 +28,13 @@ class DatosHoteles
      * @param  string $codigo
      * @param  string $nombre
      * @param  string $estado
-     * @param string $activa
+     * @param bool $activa
      */
     public function __construct(
         string $codigo,
         string $nombre,
         string $estado,
-        string $activa
+        bool $activa
     ) {
         $this->codigo = $codigo;
         $this->nombre = $nombre;

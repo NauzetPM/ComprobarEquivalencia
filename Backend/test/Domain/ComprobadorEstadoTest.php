@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ComprobadorEquivalenciasTest\Domain;
 
 use ComprobadorEquivalencias\Domain\DatosHoteles;

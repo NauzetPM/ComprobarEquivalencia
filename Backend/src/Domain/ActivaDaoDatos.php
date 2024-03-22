@@ -1,22 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ComprobadorEquivalencias\Domain;
 
 class ActivaDaoDatos
 {
     private bool $esDescargada;
     private bool $activa;
+    /**
+     * @param bool $esDescargada
+     * @param bool $activa
+     */
     public function __construct(bool $esDescargada, bool $activa)
     {
         $this->esDescargada = $esDescargada;
         $this->activa = $activa;
     }
 
+    /**
+     * @return bool
+     */
     public function getesDescargada(): bool
     {
         return $this->esDescargada;
     }
 
+    /**
+     * @return bool
+     */
     public function getactiva(): bool
     {
         return $this->activa;

@@ -17,11 +17,11 @@ class DatosHotelesTest extends TestCase
      */
     public function testasArray(): void
     {
-        $hotel = new DatosHoteles("98901", "Nombre Hotel", "Estado Del Hotel", "Si");
+        $hotel = new DatosHoteles("98901", "Nombre Hotel", "Estado Del Hotel", true);
         $array = $hotel->asArray();
         $this->assertSame('98901', $array["Codigo"]);
         $this->assertSame('Nombre Hotel', $array["Nombre"]);
         $this->assertSame('Estado Del Hotel', $array["Estado"]);
-        $this->assertSame('Si', $array["Activa"]);
+        $this->assertSame(true, $array["Activa"]);
     }
 }

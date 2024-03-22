@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ComprobadorEquivalencias\Application;
 
 use ComprobadorEquivalencias\Domain\GestorSelector;

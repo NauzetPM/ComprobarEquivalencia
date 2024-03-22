@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ComprobadorEquivalenciasTest\Infrastructure;
 
 use PHPUnit\Framework\TestCase;

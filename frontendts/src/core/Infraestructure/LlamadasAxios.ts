@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { AxiosRequestConfig } from 'axios';
 import { rutaApi } from "../../Globals";
+import { RespuestaApi } from './TypeRespuestaApi';
 
 class LlamadasAxios {
 
@@ -11,6 +12,7 @@ class LlamadasAxios {
 
   async postWithHeadersCall(formData: FormData, headers: AxiosRequestConfig) {
     const respuesta = await axios.post(rutaApi, formData, headers);
+    const respuestaApi:RespuestaApi=respuesta.data;
     return respuesta.data;
   }
 }

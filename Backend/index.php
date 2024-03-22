@@ -1,4 +1,6 @@
 <?php
+
+declare(strict_types=1);
 /* MOSTRAR LOS ERRORES */
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
@@ -31,7 +33,7 @@ $verbo_http = obtenerMetodoHTTP();
 $servicio = obtenerServicio();
 $parametros = obtenerParametros();
 
-$gestorServicio = buscarServicioDisponible($verbo_http,$servicio);
+$gestorServicio = buscarServicioDisponible($verbo_http, $servicio);
 $controlador = $gestorServicio['controlador'];
 $funcion = $gestorServicio['funcion'];
 try {
@@ -46,5 +48,3 @@ try {
 
     die(json_encode($error));
 }
-
-

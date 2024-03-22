@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ComprobadorEquivalencias\Infrastructure;
 
 class CacheManager
@@ -33,10 +35,10 @@ class CacheManager
     /**
      *
      * @param  string $key
-     * @param  int $expiry
+     * @param  float $expiry
      * @return bool
      */
-    public function esTokenValido(string $key, int $expiry = 1): bool
+    public function esTokenValido(string $key, float $expiry = 10): bool
     {
         $filename = $this->cacheDir . '/' . $key;
         if (!file_exists($filename)) {

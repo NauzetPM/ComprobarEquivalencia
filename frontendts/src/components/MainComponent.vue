@@ -23,7 +23,6 @@
         />
       </label>
       <br />
-      
       <el-button type="primary" @click="subirFichero" class="custom-button">Subir</el-button>
     </form>
 
@@ -34,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import  LlamadasAxios from "../core/Infraestructure/AxiosCalls";
+import  LlamadasAxios from "../core/Infraestructure/LlamadasAxios";
 import { ElSelect, ElOption, ElButton } from "element-plus";
 import "element-plus/dist/index.css";
 import CryptoJS from "crypto-js";
@@ -90,7 +89,7 @@ export default defineComponent({
           responseType: "blob",
         };
         const response = await this.llamadas.postWithHeadersCall(formData, headers);
-        const url = window.URL.createObjectURL(new Blob([response]));
+        const url = window.URL.createObjectURL(new Blob([response],{ type: 'application/octet-stream' }));
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute("download", "descarga.ods");
