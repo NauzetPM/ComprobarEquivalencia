@@ -16,6 +16,7 @@ class LlamadasAxios {
 }
 
 export default LlamadasAxios;
+
 /*
 export async function postCall(formData:FormData) {
   const respuesta = await axios.post(rutaApi, formData);

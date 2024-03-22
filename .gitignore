@@ -1,3 +1,8 @@
+# Ignorar el archivo composer.phar
 composer.phar
-vendor
-node_modules
+
+# Ignorar el directorio vendor
+/vendor
+
+# Ignorar el directorio node_modules
+/node_modules

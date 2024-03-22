@@ -4,6 +4,7 @@ namespace ComprobadorEquivalenciasTest\Domain;
 
 use ComprobadorEquivalencias\Domain\DatosHoteles;
 use ComprobadorEquivalencias\Domain\ActivaDao;
+use ComprobadorEquivalencias\Domain\ActivaDaoDatos;
 use ComprobadorEquivalencias\Domain\ComprobadorEstado;
 use ComprobadorEquivalencias\Domain\EquivalenciasDAO;
 use ComprobadorEquivalencias\Domain\EstablecimientoMayorista;
@@ -98,8 +99,9 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 1, // descargado
             'activo' => 1
         ];
+        $resultadoComprobarEquivalenciaClase = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia);
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturn($resultadoComprobarEquivalencia);
+            ->willReturn($resultadoComprobarEquivalenciaClase);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -168,8 +170,9 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 1, // descargado
             'activo' => 0
         ];
+        $resultadoComprobarEquivalenciaClase = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia);
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturn($resultadoComprobarEquivalencia);
+            ->willReturn($resultadoComprobarEquivalenciaClase);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -238,8 +241,9 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 0, // descargado
             'activo' => 0
         ];
+        $resultadoComprobarEquivalenciaClase = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia);
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturn($resultadoComprobarEquivalencia);
+            ->willReturn($resultadoComprobarEquivalenciaClase);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -307,8 +311,9 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 1, // descargado
             'activo' => 1
         ];
+        $resultadoComprobarEquivalenciaClase = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia);
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturn($resultadoComprobarEquivalencia);
+            ->willReturn($resultadoComprobarEquivalenciaClase);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -376,8 +381,9 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 1, // descargado
             'activo' => 0
         ];
+        $resultadoComprobarEquivalenciaClase = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia);
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturn($resultadoComprobarEquivalencia);
+            ->willReturn($resultadoComprobarEquivalenciaClase);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -447,8 +453,9 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 1, // descargado
             'activo' => 0
         ];
+        $resultadoComprobarEquivalenciaClase = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia);
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturn($resultadoComprobarEquivalencia);
+            ->willReturn($resultadoComprobarEquivalenciaClase);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -517,8 +524,9 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 1, // descargado
             'activo' => 1
         ];
+        $resultadoComprobarEquivalenciaClase = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia);
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturn($resultadoComprobarEquivalencia);
+            ->willReturn($resultadoComprobarEquivalenciaClase);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -591,8 +599,10 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 1, // descargado
             'activo' => 0
         ];
+        $resultadoComprobarEquivalenciaClase1 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia1);
+        $resultadoComprobarEquivalenciaClase2 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia2);
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturnOnConsecutiveCalls($resultadoComprobarEquivalencia1, $resultadoComprobarEquivalencia2);
+            ->willReturnOnConsecutiveCalls($resultadoComprobarEquivalenciaClase1, $resultadoComprobarEquivalenciaClase2);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -671,8 +681,10 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 1, // descargado
             'activo' => 0
         ];
+        $resultadoComprobarEquivalenciaClase1 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia1);
+        $resultadoComprobarEquivalenciaClase2 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia2);
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturnOnConsecutiveCalls($resultadoComprobarEquivalencia1, $resultadoComprobarEquivalencia2);
+            ->willReturnOnConsecutiveCalls($resultadoComprobarEquivalenciaClase1, $resultadoComprobarEquivalenciaClase2);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -751,8 +763,10 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 1, // descargado
             'activo' => 0
         ];
+        $resultadoComprobarEquivalenciaClase1 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia1);
+        $resultadoComprobarEquivalenciaClase2 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia2);
         $descargadoActivoDao->method('comprobarDescargadaActiva')
-            ->willReturnOnConsecutiveCalls($resultadoComprobarEquivalencia1, $resultadoComprobarEquivalencia2);
+            ->willReturnOnConsecutiveCalls($resultadoComprobarEquivalenciaClase1, $resultadoComprobarEquivalenciaClase2);
 
         $instancia = new ComprobadorEstado(
             $datosEntrada,
@@ -900,15 +914,23 @@ class ComprobadorEstadoTest extends TestCase
             'total' => 0, // descargado
             'activo' => 0
         ];
+        $resultadoComprobarEquivalenciaClase1 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia1);
+        $resultadoComprobarEquivalenciaClase2 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia2);
+        $resultadoComprobarEquivalenciaClase3 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia3);
+        $resultadoComprobarEquivalenciaClase4 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia4);
+        $resultadoComprobarEquivalenciaClase5 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia5);
+        $resultadoComprobarEquivalenciaClase6 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia6);
+        $resultadoComprobarEquivalenciaClase7 = ActivaDaoDatos::fromArray($resultadoComprobarEquivalencia7);
+
         $descargadoActivoDao->method('comprobarDescargadaActiva')
             ->willReturnOnConsecutiveCalls(
-                $resultadoComprobarEquivalencia1,
-                $resultadoComprobarEquivalencia2,
-                $resultadoComprobarEquivalencia3,
-                $resultadoComprobarEquivalencia4,
-                $resultadoComprobarEquivalencia5,
-                $resultadoComprobarEquivalencia6,
-                $resultadoComprobarEquivalencia7,
+                $resultadoComprobarEquivalenciaClase1,
+                $resultadoComprobarEquivalenciaClase2,
+                $resultadoComprobarEquivalenciaClase3,
+                $resultadoComprobarEquivalenciaClase4,
+                $resultadoComprobarEquivalenciaClase5,
+                $resultadoComprobarEquivalenciaClase6,
+                $resultadoComprobarEquivalenciaClase7,
             );
 
         $instancia = new ComprobadorEstado(
